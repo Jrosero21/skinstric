@@ -8,11 +8,12 @@
   --color-button-bg:#1A1B1C;
   --color-button-text:#FCFCFC;
 
+
   /* size of the half-diamond art; set this to the PNG’s pixel height so math lines up */
   --edge-height: 602px;
 
   /* small padding from the diamond’s inner corner to the callout label */
-  --edge-pad: 18px;
+  --edge-pad: 98px;
 }
 
 html, body, #root { height: 100%; }
