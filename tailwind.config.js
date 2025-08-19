@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// Tailwind v4 doesn't require "content". We'll just extend theme a bit
-// so we can map CSS variables (Figma tokens) into Tailwind classes.
+
 export default {
     theme: {
       extend: {
@@ -10,8 +9,8 @@ export default {
           brand: "hsl(var(--brand))",
         },
         fontFamily: {
-          // using Inter now; can swap to brand font later
-          sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+          // swapped from Inter → Roobert so the app uses the correct font
+          sans: ["Roobert", "ui-sans-serif", "system-ui", "sans-serif"],
         },
         letterSpacing: {
           // tight hero look per Figma

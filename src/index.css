@@ -1,43 +1,92 @@
-/* -----------------------------------------------------
-   Tailwind v4 global import
-   (no need for base/components/utilities split anymore)
------------------------------------------------------ */
 @import "tailwindcss";
 
-/* -----------------------------------------------------
-   Design tokens (from Figma or custom)
-   Keep empty for now — we’ll add brand colors, typography,
-   and spacing scales later.
------------------------------------------------------ */
-:root {
-  /* --bg: 0 0% 98%;     // Example: almost-white background */
-  /* --fg: 0 0% 7%;      // Example: near-black text */
-  /* --brand: 220 80% 50%; // Example: brand accent color */
+/* team note: keeping a few CSS variables so we can nudge layout without hunting values */
+:root{
+  --color-bg:#fff;
+  --color-text:#1A1B1C;
+  --color-text-muted:rgba(26,27,28,.60);
+  --color-button-bg:#1A1B1C;
+  --color-button-text:#FCFCFC;
+
+  /* size of the half-diamond art; set this to the PNG’s pixel height so math lines up */
+  --edge-height: 602px;
+
+  /* small padding from the diamond’s inner corner to the callout label */
+  --edge-pad: 18px;
 }
 
-/* -----------------------------------------------------
-   Global reset & typography defaults
------------------------------------------------------ */
-html, body, #root {
-  height: 100%;
+html, body, #root { height: 100%; }
+* { box-sizing: border-box; }
+body { margin: 0; @apply font-sans antialiased; }
+
+/* ===== navbar helpers (left as-is so header stays correct) ===== */
+.nav-brand{font-size:14px;line-height:16px;font-weight:600;letter-spacing:-.02em;color:var(--color-text);text-transform:uppercase;margin-right:8px;}
+.nav-intro{font-size:14px;line-height:16px;font-weight:600;letter-spacing:-.02em;color:#1a1b1c83;margin:0 6px;text-transform:uppercase;}
+.bracket{font-size:14px;line-height:16px;color:var(--color-text);opacity:.6;}
+.nav-button{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 16px;margin:0 16px;background:var(--color-button-bg);color:var(--color-button-text);font-size:10px;font-weight:600;line-height:16px;text-transform:uppercase;border:none;border-radius:0;transform:scale(.8);}
+
+/* ========================= HERO ========================= */
+/* note to team: hero is everything below the fixed navbar */
+.hero{position:relative;background:var(--color-bg);min-height:calc(100vh - 64px);overflow:hidden;}
+
+/* center block for the headline */
+.hero-center{display:grid;place-items:center;text-align:center;position:relative;height:71dvh;z-index:3;}
+@media (min-width:1024px){.hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);height:auto;}}
+.hero-heading{color:var(--color-text);font-weight:400;letter-spacing:-.02em;line-height:1;font-size:60px;z-index:3;position:relative;}
+@media (min-width:1024px){.hero-heading{font-size:100px;}}
+
+/* decorative dotted halves — PNG is already half, so we mirror the right side */
+.edge-img{
+  position:fixed;top:50%;transform:translateY(-50%);height:var(--edge-height);width:auto;
+  opacity:.6;pointer-events:none;z-index:1;
+}
+.edge-img--left{left:0;}
+.edge-img--right{right:0;transform:translateY(-50%) scaleX(-1);} /* mirror same art for the right */
+
+/* interactive zones that sit ON TOP of the diamonds; width is half of the diamond height.
+   this keeps the callouts inside the inner corner regardless of the image’s pixel size */
+.edge-zone{
+  position:fixed;top:50%;transform:translateY(-50%);
+  height:var(--edge-height);width:calc(var(--edge-height) / 2);
+  display:flex;align-items:center;z-index:4;pointer-events:none;
+}
+.edge-zone--left{left:0;justify-content:flex-end;}
+.edge-zone--right{right:0;justify-content:flex-start;}
+
+/* actual callout (we re-enable pointer events here so it’s clickable) */
+.side-callout{
+  position:relative;display:inline-flex;align-items:center;gap:16px;height:36px;color:var(--color-text);
+  pointer-events:auto;z-index:5;
+}
+/* pad the callout a touch away from the inner corner so it breathes */
+.side-callout--left{margin-right:var(--edge-pad);}
+.side-callout--right{margin-left:var(--edge-pad);}
+
+/* diamond shape behind the arrow */
+.callout-square{
+  width:30px;height:30px;border:1px solid #1A1B1C;transform:rotate(45deg);display:grid;place-items:center;
 }
 
-body {
-  @apply font-sans antialiased;
+/* filled SVG triangles, pointing inward */
+.tri{fill:#1A1B1C;}
+.tri-right{transform:translateX(1px);} /* tiny optical nudge */
+.tri-left{transform:translateX(-1px);}
+
+/* label text matches comp sizing */
+.callout-text{
+  font-size:14px;line-height:16px;letter-spacing:-.02em;font-weight:600;opacity:.7;text-transform:uppercase;white-space:nowrap;
 }
 
-/* -----------------------------------------------------
-   Layout helpers
-   Add utility wrappers here if needed (e.g. container sizes)
------------------------------------------------------ */
-/* .container-narrow {
-  @apply max-w-[1120px] mx-auto px-6;
-} */
+/* hide side zones on tablet/phone so we don’t fight the headline */
+@media (max-width:1023px){.edge-zone{display:none;}}
 
-/* -----------------------------------------------------
-   Component helpers
-   Add shared class shortcuts (like headline helpers)
------------------------------------------------------ */
-/* .h1-hero {
-  @apply text-6xl md:text-7xl leading-[0.98] tracking-tight font-light;
-} */
+/* captions */
+.hero-caption-mobile{width:30ch;margin-top:16px;font-size:16px;font-weight:600;text-align:center;color:var(--color-text-muted);}
+@media (min-width:1024px){.hero-caption-mobile{display:none;}}
+.hero-caption-desktop{display:none;}
+@media (min-width:1024px){
+  .hero-caption-desktop{
+    display:block;position:fixed;left:48px;bottom:64px; /* nudged up per comp */
+    font-weight:400;font-size:12px;line-height:16px;color:var(--color-text);z-index:2;
+  }
+}

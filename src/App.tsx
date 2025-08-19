@@ -1,22 +1,19 @@
 import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
 
+// team note: pages are kept minimal for phase 1
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navbar placeholder */}
-      <header className="bg-gray-900 text-white p-4">
-        <h1 className="text-xl font-bold">Skinstric</h1>
-      </header>
-
-      {/* Main content */}
-      <main className="flex-1 flex items-center justify-center">
-        <h2 className="text-3xl font-semibold">Welcome to Skinstric</h2>
+      <Navbar />
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
-
-      {/* Footer placeholder */}
-      <footer className="bg-gray-100 text-center p-4 text-sm text-gray-600">
-        © {new Date().getFullYear()} Skinstric. All rights reserved.
-      </footer>
     </div>
   );
 }
