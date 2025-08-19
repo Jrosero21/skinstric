@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    // using modern JS features and DOM types
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+
+    /* Vite bundler mode */
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+
+    /* Build/emit */
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Safety flags (kept lean to avoid editor noise) */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Let TS know about import.meta, env, etc. */
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}

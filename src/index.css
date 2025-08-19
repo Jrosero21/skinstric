@@ -1,0 +1,43 @@
+/* -----------------------------------------------------
+   Tailwind v4 global import
+   (no need for base/components/utilities split anymore)
+----------------------------------------------------- */
+@import "tailwindcss";
+
+/* -----------------------------------------------------
+   Design tokens (from Figma or custom)
+   Keep empty for now — we’ll add brand colors, typography,
+   and spacing scales later.
+----------------------------------------------------- */
+:root {
+  /* --bg: 0 0% 98%;     // Example: almost-white background */
+  /* --fg: 0 0% 7%;      // Example: near-black text */
+  /* --brand: 220 80% 50%; // Example: brand accent color */
+}
+
+/* -----------------------------------------------------
+   Global reset & typography defaults
+----------------------------------------------------- */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply font-sans antialiased;
+}
+
+/* -----------------------------------------------------
+   Layout helpers
+   Add utility wrappers here if needed (e.g. container sizes)
+----------------------------------------------------- */
+/* .container-narrow {
+  @apply max-w-[1120px] mx-auto px-6;
+} */
+
+/* -----------------------------------------------------
+   Component helpers
+   Add shared class shortcuts (like headline helpers)
+----------------------------------------------------- */
+/* .h1-hero {
+  @apply text-6xl md:text-7xl leading-[0.98] tracking-tight font-light;
+} */

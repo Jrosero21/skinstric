@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Vite bundler mode */
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+
+    /* Safety flags */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* No output for config files */
+    "noEmit": true
+  },
+  "include": ["vite.config.ts"]
+}
