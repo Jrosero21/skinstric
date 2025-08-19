@@ -8,6 +8,7 @@
   --color-button-bg:#1A1B1C;
   --color-button-text:#FCFCFC;
 
+
   /* size of the half-diamond art; set this to the PNG’s pixel height so math lines up */
   --edge-height: 602px;
 
@@ -67,12 +68,10 @@ body { margin: 0; @apply font-sans antialiased; }
   width:30px;height:30px;border:1px solid #1A1B1C;transform:rotate(45deg);display:grid;place-items:center;
 }
 
-/* team note (amateur dev): the arrow images come from /assets and should match ~9.4×10.9px */
-.callout-arrow{
-  width:10px;
-  height:11px;
-  display:block;
-}
+/* filled SVG triangles, pointing inward */
+.tri{fill:#1A1B1C;}
+.tri-right{transform:translateX(1px);} /* tiny optical nudge */
+.tri-left{transform:translateX(-1px);}
 
 /* label text matches comp sizing */
 .callout-text{
@@ -92,3 +91,28 @@ body { margin: 0; @apply font-sans antialiased; }
     font-weight:400;font-size:12px;line-height:16px;color:var(--color-text);z-index:2;
   }
 }
+
+
+/* ========================== TESTING PAGE ============================== */
+
+
+.testing{position:relative;min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;background:var(--color-bg);overflow:hidden;}
+.rombs{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.rombs img{position:absolute;top:50%;left:50%;width:var(--size);height:var(--size);object-fit:contain;opacity:.3;transform:translate(-50%,-50%) rotate(0deg);}
+@keyframes rotate360{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+.r1{--size:602px;animation:rotate360 55s linear infinite;}
+.r2{--size:682px;animation:rotate360 40s linear infinite;}
+.r3{--size:762px;animation:rotate360 30s linear infinite;}
+
+.testing-center{text-align:center;position:relative;z-index:2;}
+.testing-sub{font-size:12px;opacity:.6;margin-bottom:10px;letter-spacing:.06em;}
+.testing-heading{display:inline-block;color:var(--color-text);font-weight:400;letter-spacing:-.02em;line-height:1.1;font-size:56px;border-bottom:2px solid var(--color-text);padding-bottom:6px;margin-bottom:24px;}
+@media (min-width:1024px){.testing-heading{font-size:72px;}}
+
+.testing-form{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:16px;}
+.testing-input{border:1px solid #e5e7eb;padding:10px 12px;min-width:240px;font-size:14px;outline:none;}
+.testing-input:focus{border-color:#1A1B1C;}
+.testing-submit{background:#1A1B1C;color:#FCFCFC;border:none;padding:10px 16px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+.testing-loading{font-size:18px;letter-spacing:.02em;color:var(--color-text);opacity:.8;margin-top:12px;}
+
+.testing-back{position:fixed;left:24px;bottom:24px;color:var(--color-text);opacity:.7;font-size:12px;text-decoration:none;z-index:3;}
