@@ -8,7 +8,6 @@
   --color-button-bg:#1A1B1C;
   --color-button-text:#FCFCFC;
 
-
   /* size of the half-diamond art; set this to the PNG’s pixel height so math lines up */
   --edge-height: 602px;
 
@@ -68,10 +67,12 @@ body { margin: 0; @apply font-sans antialiased; }
   width:30px;height:30px;border:1px solid #1A1B1C;transform:rotate(45deg);display:grid;place-items:center;
 }
 
-/* filled SVG triangles, pointing inward */
-.tri{fill:#1A1B1C;}
-.tri-right{transform:translateX(1px);} /* tiny optical nudge */
-.tri-left{transform:translateX(-1px);}
+/* team note (amateur dev): the arrow images come from /assets and should match ~9.4×10.9px */
+.callout-arrow{
+  width:10px;
+  height:11px;
+  display:block;
+}
 
 /* label text matches comp sizing */
 .callout-text{

@@ -1,60 +1,67 @@
-// Home.tsx
-// note to team: importing the PNG through Vite keeps paths correct in dev/prod
-const halfDiamond = new URL("../assets/Rectangle.png", import.meta.url).href;
+import React from "react";
+// team note (amateur dev): importing the half-diamond art and the little triangle icons
+import Edge from "../assets/Rectangle.png";
+import PolygonLeft from "../assets/PolygonLeft.png";
+import PolygonRight from "../assets/PolygonRight.png";
 
+/* team note (amateur dev):
+   This page only handles the hero. The header is fixed by <Navbar /> already.
+   The “edge” PNGs are purely decorative (behind content). The two .edge-zone
+   containers sit on top so we can position the label + icon right at the inner
+   corner without messing with the background images.
+*/
 export default function Home() {
   return (
     <section className="hero">
-      {/* decorative half-diamonds; pointer-events off so they never block clicks */}
-      <img src={halfDiamond} alt="" aria-hidden="true" className="edge-img edge-img--left" />
-      <img src={halfDiamond} alt="" aria-hidden="true" className="edge-img edge-img--right" />
+      {/* decorative half diamonds (behind) */}
+      <img src={Edge} alt="" className="edge-img edge-img--left" />
+      <img src={Edge} alt="" className="edge-img edge-img--right" />
 
-      {/* left callout sits INSIDE the left diamond (zone width = edge-height/2) */}
-      <div className="edge-zone edge-zone--left">
-        <button className="side-callout side-callout--left" type="button" aria-label="Discover A.I.">
-          <span className="callout-square">
-            {/* filled inward arrow (▶) — using tiny inline SVG so it’s crisp at any scale */}
-            <svg viewBox="0 0 24 24" width="11" height="11" className="tri tri-right" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </span>
-          <span className="callout-text">DISCOVER A.I.</span>
-        </button>
-      </div>
-
-      {/* right callout sits INSIDE the right diamond */}
-      <div className="edge-zone edge-zone--right">
-        <button className="side-callout side-callout--right" type="button" aria-label="Take test">
-          <span className="callout-text">TAKE TEST</span>
-          <span className="callout-square">
-            {/* filled inward arrow (◀) */}
-            <svg viewBox="0 0 24 24" width="11" height="11" className="tri tri-left" aria-hidden="true">
-              <path d="M16 19V5L5 12z" />
-            </svg>
-          </span>
-        </button>
-      </div>
-
-      {/* center headline */}
+      {/* center headline block */}
       <div className="hero-center">
         <h1 className="hero-heading">
           Sophisticated
           <br />
           skincare
         </h1>
-        {/* mobile caption only */}
+
+        {/* visible on small screens only (desktop has the fixed caption) */}
         <p className="hero-caption-mobile">
-          Skinstric developed an A.I. that creates a highly-personalized routine tailored to what your skin needs.
+          Skinstric developed an A.I. that creates a highly-personalized routine
+          tailored to what your skin needs.
         </p>
       </div>
 
-      {/* desktop caption (bottom-left) */}
+      {/* left interactive zone sitting on top of the left diamond */}
+      <div className="edge-zone edge-zone--left" aria-hidden>
+        {/* team note: re-enable pointer events on the actual callout so it can be clicked later */}
+        <button className="side-callout side-callout--left" type="button">
+          <span className="callout-square" aria-hidden>
+            {/* swapped: use RIGHT arrow on the LEFT side so it points inward */}
+            <img src={PolygonRight} alt="" className="callout-arrow" />
+          </span>
+          <span className="callout-text">Discover A.I.</span>
+        </button>
+      </div>
+
+      {/* right interactive zone sitting on top of the right diamond */}
+      <div className="edge-zone edge-zone--right" aria-hidden>
+        <button className="side-callout side-callout--right" type="button">
+          <span className="callout-text">Take test</span>
+          <span className="callout-square" aria-hidden>
+            {/* swapped: use LEFT arrow on the RIGHT side so it points inward */}
+            <img src={PolygonLeft} alt="" className="callout-arrow" />
+          </span>
+        </button>
+      </div>
+
+      {/* desktop caption in the bottom-left (fixed) */}
       <p className="hero-caption-desktop">
-        SKINSTRIC DEVELOPED AN A.I. THAT CREATES A
+        Skinstric developed an A.I. that creates a
         <br />
-        HIGHLY-PERSONALIZED ROUTINE TAILORED TO
+        highly-personalized routine tailored to
         <br />
-        WHAT YOUR SKIN NEEDS.
+        what your skin needs.
       </p>
     </section>
   );
