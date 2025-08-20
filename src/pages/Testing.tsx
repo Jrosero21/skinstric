@@ -1,99 +1,90 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-/* rotating dotted diamonds */
+// use RELATIVE paths (keeps your build happy without vite alias)
 import RectSmall from "../assets/Rectangle2778.png";
-import RectMid   from "../assets/Rectangle2779.png";
-import RectLarge from "../assets/Rectangle2780.png";
+import RectMid from "../assets/Rectangle2779.png";
+import RectBig from "../assets/Rectangle2780.png";
+import PolygonLeft from "../assets/PolygonLeft.png";
 
-/* back button arrow (use LEFT asset so the direction is correct) */
-import ArrowLeft from "../assets/PolygonLeft.png";
+type Phase = "name" | "city" | "loading";
 
 export default function Testing() {
-  const nav = useNavigate();
-
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [phase, setPhase] = useState<Phase>("name");
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
+  // focus the invisible input so typing “just works”
   useEffect(() => {
     inputRef.current?.focus();
-  }, [step]);
+  }, [phase]);
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const placeholder = phase === "name" ? "Introduce Yourself" : "Enter your city";
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      if (step === 0) {
-        setStep(1);
+      if (phase === "name") {
+        setPhase("city");
         setValue("");
-      } else if (step === 1) {
-        setStep(2);
-        // setTimeout(() => nav("/result"), 900);
+        return;
+      }
+      if (phase === "city") {
+        setPhase("loading");
+        // mock loading -> route after a brief pause
+        setTimeout(() => {
+          navigate("/result"); // you can swap to your real route later
+        }, 900);
       }
     }
-  };
-
-  const headline =
-    step === 0 ? (value || "Introduce Yourself") : (value || "Enter City");
+  }
 
   return (
-    <section className="testing">
-      {/* subhead sits under the header; separate container so it doesn't affect centering */}
-      <div className="testing-subhead-wrap" aria-hidden="true">
+    <section id="testing">
+         {/* Subhead below brand (do not change this block’s position) */}
+      <div className="testing-subhead-wrap">
         <p className="testing-subhead">TO START ANALYSIS</p>
       </div>
 
-      {/* dotted diamonds */}
-      <img src={RectLarge} alt="" className="rhombus rhombus--3" />
-      <img src={RectMid}   alt="" className="rhombus rhombus--2" />
-      <img src={RectSmall} alt="" className="rhombus rhombus--1" />
+        <div className="testing-shell">
+     
+      {/* Rotating diamonds (kept exactly as your CSS expects) */}
+      <div className="rombus-stage" aria-hidden>
+        <img src={RectBig} alt="" className="rombus-img rombus-big spin-slowest" draggable={false} />
+        <img src={RectMid} alt="" className="rombus-img rombus-mid  spin-slow"    draggable={false} />
+        <img src={RectSmall} alt="" className="rombus-img rombus-small spin-med"   draggable={false} />
+      </div>
 
-      {/* center input (click anywhere to focus) */}
-      <div
-        className="testing-center"
-        onClick={() => inputRef.current?.focus()}
-        role="button"
-        aria-label="Type your response"
-      >
-        {value.length === 0 && <p className="click-to-type">CLICK TO TYPE</p>}
+      {/* Center stack */}
+      <div className="testing-center" onClick={() => inputRef.current?.focus()}>
+        <div className="testing-click-hint">CLICK TO TYPE</div>
 
-        <h1 className="testing-title" aria-live="polite">
-          <span className="title-text">{headline}</span>
-          <span className="title-fixed-underline" aria-hidden="true" />
+        {/* underline matches text width because of .title-inline */}
+        <h1 className="testing-title">
+          <span className="title-inline">
+            {value.length ? value : placeholder}
+          </span>
         </h1>
 
-        {/* hidden input captures typing */}
+        {/* invisible input that captures typing */}
         <input
           ref={inputRef}
-          className="sr-only-input"
+          className="testing-hidden-input"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKeyDown}
-          autoCapitalize="none"
-          autoCorrect="off"
-          autoComplete="off"
+          aria-label={placeholder}
         />
       </div>
 
-      {/* back button (bottom-left) */}
-      <button
-        type="button"
-        className="testing-back side-callout side-callout--left"
-        onClick={() => nav(-1)}
-        aria-label="Go back"
-      >
-        <div className="callout-square">
-          <img src={ArrowLeft} alt="" className="callout-arrow arrow-cancel-rotate" />
-        </div>
-        <span className="callout-text">BACK</span>
-      </button>
-
-      {step === 2 && (
-        <div className="testing-loading" aria-live="polite">
-          <div className="dot dot1" />
-          <div className="dot dot2" />
-          <div className="dot dot3" />
-        </div>
-      )}
+      {/* Back (left corner) */}
+      <Link to="/" className="testing-back" aria-label="Back to intro">
+        <span className="testing-back-icon">
+          <img src={PolygonLeft} alt="" />
+        </span>
+        <span className="testing-back-text">Back</span>
+      </Link>
+      </div>
     </section>
   );
 }
