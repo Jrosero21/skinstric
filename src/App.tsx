@@ -2,8 +2,8 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Testing from "./pages/Testing";
-import Capture from "./pages/Capture";
+import Testing from "./pages/Testing";    // keep your existing file
+import Capture from "./pages/Capture";    // NEW
 
 export default function App() {
   return (
@@ -13,7 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/testing" element={<Testing />} />
-          <Route path="/capture" element={<Capture />} />
+          <Route path="/capture" element={<Capture />} /> {/* or /result */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
