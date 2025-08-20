@@ -1,5 +1,4 @@
 import React from "react";
-// team note (amateur dev): importing the half-diamond art and the little triangle icons
 import Edge from "../assets/Rectangle.png";
 import PolygonLeft from "../assets/PolygonLeft.png";
 import PolygonRight from "../assets/PolygonRight.png";
@@ -25,7 +24,7 @@ export default function Home() {
           skincare
         </h1>
 
-        {/* visible on small screens only (desktop has the fixed caption) */}
+
         <p className="hero-caption-mobile">
           Skinstric developed an A.I. that creates a highly-personalized routine
           tailored to what your skin needs.
@@ -37,7 +36,7 @@ export default function Home() {
         {/* team note: re-enable pointer events on the actual callout so it can be clicked later */}
         <button className="side-callout side-callout--left" type="button">
           <span className="callout-square" aria-hidden>
-            {/* swapped: use RIGHT arrow on the LEFT side so it points inward */}
+         
             <img src={PolygonRight} alt="" className="callout-arrow" />
           </span>
           <span className="callout-text">Discover A.I.</span>
@@ -49,13 +48,13 @@ export default function Home() {
         <button className="side-callout side-callout--right" type="button">
           <span className="callout-text">Take test</span>
           <span className="callout-square" aria-hidden>
-            {/* swapped: use LEFT arrow on the RIGHT side so it points inward */}
+       
             <img src={PolygonLeft} alt="" className="callout-arrow" />
           </span>
         </button>
       </div>
 
-      {/* desktop caption in the bottom-left (fixed) */}
+      {/* desktop caption in the bottom-left */}
       <p className="hero-caption-desktop">
         Skinstric developed an A.I. that creates a
         <br />

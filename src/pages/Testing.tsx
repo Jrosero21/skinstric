@@ -1,80 +1,99 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import rect602 from "../assets/Rectangle2778.png"; // 602 x 602
-import rect682 from "../assets/Rectangle2779.png"; // 682 x 682
-import rect762 from "../assets/Rectangle2780.png"; // 762 x 762
+/* rotating dotted diamonds */
+import RectSmall from "../assets/Rectangle2778.png";
+import RectMid   from "../assets/Rectangle2779.png";
+import RectLarge from "../assets/Rectangle2780.png";
+
+/* back button arrow (use LEFT asset so the direction is correct) */
+import ArrowLeft from "../assets/PolygonLeft.png";
 
 export default function Testing() {
-  // very light state machine just to show the skeleton of the flow
-  const [step, setStep] = useState<"name" | "city" | "loading">("name");
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
+  const nav = useNavigate();
 
-  function goNext(e: React.FormEvent) {
-    e.preventDefault();
-    if (step === "name" && name.trim()) {
-      setStep("city");
-    } else if (step === "city" && city.trim()) {
-      setStep("loading");
-      // purely decorative delay so you can see the loading state
-      setTimeout(() => {
-        // we’ll wire this to the real next screen later
-      }, 1500);
+  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [step]);
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (step === 0) {
+        setStep(1);
+        setValue("");
+      } else if (step === 1) {
+        setStep(2);
+        // setTimeout(() => nav("/result"), 900);
+      }
     }
-  }
+  };
+
+  const headline =
+    step === 0 ? (value || "Introduce Yourself") : (value || "Enter City");
 
   return (
     <section className="testing">
-      {/* rotating diamonds */}
-      <div className="rombs" aria-hidden="true">
-        <img className="r1" src={rect602} alt="" />
-        <img className="r2" src={rect682} alt="" />
-        <img className="r3" src={rect762} alt="" />
+      {/* subhead sits under the header; separate container so it doesn't affect centering */}
+      <div className="testing-subhead-wrap" aria-hidden="true">
+        <p className="testing-subhead">TO START ANALYSIS</p>
       </div>
 
-      {/* center content */}
-      <div className="testing-center">
-        {step !== "loading" ? (
-          <>
-            <div className="testing-sub">CLICK TO TYPE</div>
-            <h1 className="testing-heading">Introduce Yourself</h1>
+      {/* dotted diamonds */}
+      <img src={RectLarge} alt="" className="rhombus rhombus--3" />
+      <img src={RectMid}   alt="" className="rhombus rhombus--2" />
+      <img src={RectSmall} alt="" className="rhombus rhombus--1" />
 
-            <form className="testing-form" onSubmit={goNext}>
-              {step === "name" && (
-                <input
-                  autoFocus
-                  className="testing-input"
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              )}
+      {/* center input (click anywhere to focus) */}
+      <div
+        className="testing-center"
+        onClick={() => inputRef.current?.focus()}
+        role="button"
+        aria-label="Type your response"
+      >
+        {value.length === 0 && <p className="click-to-type">CLICK TO TYPE</p>}
 
-              {step === "city" && (
-                <input
-                  autoFocus
-                  className="testing-input"
-                  placeholder="Your city"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              )}
+        <h1 className="testing-title" aria-live="polite">
+          <span className="title-text">{headline}</span>
+          <span className="title-fixed-underline" aria-hidden="true" />
+        </h1>
 
-              <button className="testing-submit" type="submit">
-                Continue
-              </button>
-            </form>
-          </>
-        ) : (
-          <div className="testing-loading">Analyzing…</div>
-        )}
+        {/* hidden input captures typing */}
+        <input
+          ref={inputRef}
+          className="sr-only-input"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={onKeyDown}
+          autoCapitalize="none"
+          autoCorrect="off"
+          autoComplete="off"
+        />
       </div>
 
-      {/* back link (bottom-left) */}
-      <Link to="/" className="testing-back">
-        BACK
-      </Link>
+      {/* back button (bottom-left) */}
+      <button
+        type="button"
+        className="testing-back side-callout side-callout--left"
+        onClick={() => nav(-1)}
+        aria-label="Go back"
+      >
+        <div className="callout-square">
+          <img src={ArrowLeft} alt="" className="callout-arrow arrow-cancel-rotate" />
+        </div>
+        <span className="callout-text">BACK</span>
+      </button>
+
+      {step === 2 && (
+        <div className="testing-loading" aria-live="polite">
+          <div className="dot dot1" />
+          <div className="dot dot2" />
+          <div className="dot dot3" />
+        </div>
+      )}
     </section>
   );
 }
