@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Testing from "./pages/Testing";
+import Capture from "./pages/Capture";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/testing" element={<Testing />} />
+          <Route path="/capture" element={<Capture />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
