@@ -11,29 +11,14 @@ const Header = () => {
         >
           SKINSTRIC
         </a>
-        <img
-          alt="left-bracket"
-          loading="lazy"
-          width="5"
-          height="19"
-          decoding="async"
-          data-nimg="1"
-          className="w-[4px] h-[17px]"
-          src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FRectangle%202710.61a74ed4.png&w=16&q=75"
-        />
+        {/* Left bracket bar  */}
+        <span aria-hidden className="w-[4px] h-[17px] bg-[#1A1B1C]" />
         <p className="text-[#1a1b1c83] text-opacity-70 font-semibold text-sm ml-1.5 mr-1.5">
           INTRO
         </p>
-        <img
-          alt="right-bracket"
-          loading="lazy"
-          width="5"
-          height="19"
-          decoding="async"
-          data-nimg="1"
-          className="w-[4px] h-[17px]"
-          src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FRectangle%202711.b2b3b291.png&w=16&q=75"
-        />
+           
+            {/* Right bracket bar */}
+        <span aria-hidden className="w-[4px] h-[17px] bg-[#1A1B1C]" />
       </div>
       <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 mx-4 scale-[0.8] text-[#FCFCFC] text-[10px] bg-[#1A1B1C] leading-[16px]">
         ENTER CODE
