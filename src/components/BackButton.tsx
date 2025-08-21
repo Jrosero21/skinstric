@@ -1,33 +1,28 @@
+// src/components/BackButton.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-import PolygonLeft from "../assets/PolygonLeft.png";
+
+/*
+  Team note (junior dev-style):
+  - Replaced the image import (PolygonLeft.png) with an inline SVG arrow.
+  - This removes a file dependency and fixes the Vite "cannot resolve import" error.
+  - If design later requires a specific PNG, we can swap the <svg> for an <img>.
+*/
 
 export default function BackButton({ to = "/" }: { to?: string }) {
   return (
-    <Link to={to} aria-label="Back" className="relative">
-      <div>
-        {/* Mobile label inside diamond */}
-        <div className="relative w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
-          <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">
-            BACK
-          </span>
-        </div>
+    <Link to={to} aria-label="Back" className="relative inline-flex items-center gap-2">
+      {/* Inline left arrow (triangle) */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="w-3 h-3 fill-current text-[#1A1B1C] rotate-180"
+      >
+        {/* Using ▶ but drawn with a path so it’s crisp */}
+        <path d="M8 5v14l11-7z" />
+      </svg>
 
-        {/* Desktop: diamond + left triangle + BACK label */}
-        <div className="group hidden sm:flex flex-row relative justify-center items-center">
-          <div className="w-12 h-12 hidden sm:flex justify-center items-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300">
-            <img
-              src={PolygonLeft}
-              alt="Back"
-              className="w-3 rotate-[-45deg]"
-              draggable={false}
-            />
-          </div>
-          <span className="text-sm font-semibold hidden sm:block ml-6">
-            BACK
-          </span>
-        </div>
-      </div>
+      <span className="text-sm font-medium text-[#1A1B1C]">Back</span>
     </Link>
   );
 }

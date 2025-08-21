@@ -1,69 +1,36 @@
+// src/components/Navbar.jsx
 import React from "react";
-import { Link } from "react-router-dom";
 
-/**
- * Navbar (static)
- * notes for the team:
- * - using the same structure/sizing we saw in the inspected HTML
- * - 64px tall row, brand on the left, "enter code" on the right
- * - no hover states yet, no rounded corners, no extra borders
- * - colors come straight from our CSS variables so we stay on-brand
- */
+/*
+  Team note:
+  - Simple, stateless top bar used on Home (and later other pages).
+  - Kept minimal to match current design; we can swap to a global Layout later.
+*/
+
 export default function Navbar() {
   return (
-    <header className="w-full h-[64px]" style={{ background: "var(--color-bg)" }}>
-      {/* 64px row, spaced like the inspected DOM */}
-      <div className="flex flex-row h-[64px] w-full justify-between py-3 relative z-[1000]">
-        {/* left group — small vertical nudge + scale to match Figma feel */}
-        <div className="flex flex-row pt-1 scale-75 justify-center items-center">
-          {/* brand link back to home */}
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold text-sm mr-2 leading-[16px]"
-            style={{ color: "var(--color-text)" }}
-            aria-label="Go to home"
-          >
-            SKINSTRIC
-          </Link>
-
-          {/* [ INTRO ] — using characters so we don't need images */}
-          <span
-            aria-hidden
-            className="text-sm leading-[16px]"
-            style={{ color: "var(--color-text)", opacity: 0.6 }}
-          >
-            [
-          </span>
-          <span
-            className="text-sm font-semibold mx-1.5 leading-[16px]"
-            style={{ color: "#1a1b1c83" }}
-          >
-            INTRO
-          </span>
-          <span
-            aria-hidden
-            className="text-sm leading-[16px]"
-            style={{ color: "var(--color-text)", opacity: 0.6 }}
-          >
-            ]
-          </span>
-        </div>
-
-        {/* right-side button — scaled per inspected markup */}
-        <button
-          type="button"
-          className="inline-flex items-center justify-center whitespace-nowrap font-semibold h-9 px-4 py-2 mx-4 scale-[0.8] leading-[16px] text-[10px]"
-          style={{
-            backgroundColor: "var(--color-button-bg)",
-            color: "#FCFCFC",
-            border: "none",
-            borderRadius: 0,
-          }}
-          aria-label="Enter code"
+    <div className="flex h-[64px] w-full items-center justify-between px-4 md:px-6 relative z-[1000]">
+      {/* Left cluster: SKINSTRIC [INTRO] */}
+      <div className="flex items-center gap-2">
+        <a
+          href="/"
+          className="inline-flex items-center justify-center gap-2 font-semibold text-sm leading-[16px] text-[#1A1B1C]"
         >
-          ENTER CODE
-        </button>
+          SKINSTRIC
+        </a>
+        {/* “Brackets” as subtle bars to mimic the Figma look */}
+        <span className="h-[17px] w-[4px] bg-[#1A1B1C] opacity-20" />
+        <p className="text-[#1a1b1c83] font-semibold text-sm">INTRO</p>
+        <span className="h-[17px] w-[4px] bg-[#1A1B1C] opacity-20" />
       </div>
-    </header>
+
+      {/* Right: Enter Code button */}
+      <button
+        type="button"
+        className="h-9 px-3 rounded bg-[#1A1B1C] text-[10px] font-semibold leading-[16px] text-white shadow-sm hover:opacity-90 transition"
+      >
+        ENTER CODE
+      </button>
+    </div>
   );
 }

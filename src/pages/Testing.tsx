@@ -1,86 +1,113 @@
-import React, { useEffect, useRef, useState } from "react";
+// src/pages/Testing.tsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../components/BackButton";
 
-// rombus assets (relative paths, as you set up)
-import RectSmall from "../assets/Rectangle2778.png";
-import RectMid from "../assets/Rectangle2779.png";
-import RectBig from "../assets/Rectangle2780.png";
-
-type Step = "name" | "city";
+/*
+  Team note (junior dev-style):
+  - The previous build failed because Vite couldn’t resolve ../assets/*.png imports.
+  - Best practice for plain static images: place them in /public/assets and reference by URL strings.
+  - That means we don’t "import" the files; we use src="/assets/Rectangle2778.png" directly.
+*/
 
 export default function Testing() {
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<Step>("name");
-  const [value, setValue] = useState("");
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  // Phase 1 fields (name + location) – we’ll wire validation + API next
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
 
-  // keep the caret visible in the input
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [step]);
+  // Quick placeholders for the three decorative rectangles (served from /public)
+  const RectSmall = "/assets/Rectangle2778.png";
+  const RectMid = "/assets/Rectangle2779.png";
+  const RectBig = "/assets/Rectangle2780.png";
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Enter") {
-      if (step === "name") {
-        setStep("city");
-        setValue("");
-      } else {
-        // next screen in your flow
-        navigate("/capture");
-      }
-    }
+  const onBack = () => navigate("/");
+  const onProceed = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In Phase 1 API step we’ll:
+    // - validate inputs
+    // - persist to localStorage
+    // - POST to skinstricPhaseOne
+    // For now, just navigate forward as a placeholder.
+    navigate("/results");
   };
 
-  // lock underline length to a sensible base (matches “Introduce Yourself”)
-  const baseChars = step === "name" ? 18 : 12;
-  const underlineCh = Math.max(baseChars, (value?.length || 0) || baseChars);
-
   return (
-    <main className="testing-shell">
-      {/* Subheader lives under <main> (as you wanted) */}
-      <div className="testing-subhead-wrap">
-        <p className="testing-subhead">TO START ANALYSIS</p>
-      </div>
-
-      {/* rotating diamonds — classes/speeds come from your CSS */}
-      <div className="rombus-stage">
-        <img src={RectBig} alt="" className="rombus-img rombus-big spin-slow" />
-        <img src={RectMid} alt="" className="rombus-img rombus-mid spin-slower" />
-        <img src={RectSmall} alt="" className="rombus-img rombus-small spin-slowest" />
-      </div>
-
-      {/* centered headline/input with bottom border (underline) */}
-      <div className="testing-center">
-        <p className="testing-click-hint">CLICK TO TYPE</p>
-
-        <div className="flex justify-center">
-          <input
-            ref={inputRef}
-            type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={step === "name" ? "Introduce Yourself" : "Your City"}
-            aria-label={step === "name" ? "Introduce Yourself" : "City"}
-            className="
-              testing-title
-              bg-transparent
-              border-0 border-b border-[#1A1B1C]
-              focus:ring-0 outline-none
-              text-center placeholder-[#A1A8B3]
-            "
-            // underline width tracks text length (locked baseline)
-            style={{ width: `${underlineCh}ch` }}
-          />
-        </div>
-      </div>
-
-      {/* Back (same component/placement as Capture) */}
-      <div className="fixed bottom-6 left-6 z-[5]">
+    <main className="min-h-[100dvh] bg-white text-[#1A1B1C]">
+      {/* Top bar with back */}
+      <div className="flex items-center justify-between px-4 py-4">
         <BackButton to="/" />
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-xs rounded px-2 py-1 border border-[#1A1B1C]/20 hover:bg-[#1A1B1C]/5"
+        >
+          Exit
+        </button>
       </div>
+
+      {/* Decorative rectangles row (uses public assets) */}
+      <div className="mx-auto mt-6 flex items-center justify-center gap-4">
+        <img
+          src={RectSmall}
+          alt=""
+          className="h-8 w-auto select-none"
+          draggable={false}
+        />
+        <img
+          src={RectMid}
+          alt=""
+          className="h-10 w-auto select-none"
+          draggable={false}
+        />
+        <img
+          src={RectBig}
+          alt=""
+          className="h-12 w-auto select-none"
+          draggable={false}
+        />
+      </div>
+
+      {/* Phase 1 form (placeholder UI; API/validation added next) */}
+      <form onSubmit={onProceed} className="mx-auto mt-10 max-w-md px-4">
+        <h1 className="mb-6 text-2xl font-semibold">Introduce Yourself</h1>
+
+        <label className="mb-3 block text-sm font-medium">Name</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="mb-5 w-full rounded border border-[#1A1B1C]/30 px-3 py-2 outline-none focus:border-[#1A1B1C]"
+          placeholder="John Doe"
+        />
+
+        <label className="mb-3 block text-sm font-medium">Location</label>
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="mb-8 w-full rounded border border-[#1A1B1C]/30 px-3 py-2 outline-none focus:border-[#1A1B1C]"
+          placeholder="New York"
+        />
+
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded border border-[#1A1B1C] px-4 py-2 text-sm hover:bg-[#1A1B1C] hover:text-white transition"
+          >
+            Back
+          </button>
+
+            <button
+              type="submit"
+              className="rounded bg-[#1A1B1C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition"
+            >
+              Proceed
+            </button>
+        </div>
+      </form>
     </main>
   );
 }
