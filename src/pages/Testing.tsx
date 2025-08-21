@@ -1,113 +1,177 @@
 // src/pages/Testing.tsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import BackButton from "../components/BackButton";
+// Diamonds are now darker via per-layer opacities.
 
-/*
-  Team note (junior dev-style):
-  - The previous build failed because Vite couldn’t resolve ../assets/*.png imports.
-  - Best practice for plain static images: place them in /public/assets and reference by URL strings.
-  - That means we don’t "import" the files; we use src="/assets/Rectangle2778.png" directly.
-*/
+import { useState, useRef } from "react";
+import Header from "../components/Header";
+import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
+import { useNavigate } from "react-router-dom";
+import DiamondButton from "../components/ui/DiamondButton";
+
+type Step = "name" | "city" | "processing" | "done";
 
 export default function Testing() {
   const navigate = useNavigate();
-
-  // Phase 1 fields (name + location) – we’ll wire validation + API next
+  const [step, setStep] = useState<Step>("name");
   const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+  const [city, setCity] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Quick placeholders for the three decorative rectangles (served from /public)
-  const RectSmall = "/assets/Rectangle2778.png";
-  const RectMid = "/assets/Rectangle2779.png";
-  const RectBig = "/assets/Rectangle2780.png";
-
-  const onBack = () => navigate("/");
-  const onProceed = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In Phase 1 API step we’ll:
-    // - validate inputs
-    // - persist to localStorage
-    // - POST to skinstricPhaseOne
-    // For now, just navigate forward as a placeholder.
-    navigate("/results");
+  const goBack = () => {
+    if (step === "name") navigate(-1);
+    else if (step === "city") setStep("name");
+    else if (step === "processing") setStep("city");
+    else setStep("city");
   };
 
+  const advanceFromName = () => {
+    if (!name.trim()) return;
+    setStep("city");
+  };
+
+  const advanceFromCity = () => {
+    if (!city.trim()) return;
+    setStep("processing");
+    setTimeout(() => setStep("done"), 1600);
+  };
+
+  const onProceed = () => {
+    navigate("/");
+  };
+
+  const Prompt = ({
+    labelTop = "CLICK TO TYPE",
+    placeholder,
+    value,
+    onChange,
+    onEnter,
+  }: {
+    labelTop?: string;
+    placeholder: string;
+    value: string;
+    onChange: (v: string) => void;
+    onEnter: () => void;
+  }) => (
+    <div className="relative z-10 mx-auto w-full text-center">
+      <p className="mb-3 text-[14px] leading-[24px] uppercase text-[#1A1B1C]/40">
+        {labelTop}
+      </p>
+      {/* fixed underline width: 420 / 540 */}
+      <div className="mx-auto w-[420px] md:w-[540px]">
+        <input
+          ref={inputRef}
+          autoFocus
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onEnter();
+          }}
+          className="w-full bg-transparent text-center outline-none
+                     text-[#1A1B1C] text-[60px] leading-[64px] tracking-[-0.07em] font-normal
+                     border-b border-[#B8BCC1] placeholder:text-[#8a8f95]"
+          placeholder={placeholder}
+        />
+      </div>
+    </div>
+  );
+
   return (
-    <main className="min-h-[100dvh] bg-white text-[#1A1B1C]">
-      {/* Top bar with back */}
-      <div className="flex items-center justify-between px-4 py-4">
-        <BackButton to="/" />
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-xs rounded px-2 py-1 border border-[#1A1B1C]/20 hover:bg-[#1A1B1C]/5"
-        >
-          Exit
-        </button>
-      </div>
+    <div className="min-h-screen flex flex-col bg-white text-[#1A1B1C]">
+      <Header section="INTRO" />
 
-      {/* Decorative rectangles row (uses public assets) */}
-      <div className="mx-auto mt-6 flex items-center justify-center gap-4">
-        <img
-          src={RectSmall}
-          alt=""
-          className="h-8 w-auto select-none"
-          draggable={false}
-        />
-        <img
-          src={RectMid}
-          alt=""
-          className="h-10 w-auto select-none"
-          draggable={false}
-        />
-        <img
-          src={RectBig}
-          alt=""
-          className="h-12 w-auto select-none"
-          draggable={false}
-        />
-      </div>
-
-      {/* Phase 1 form (placeholder UI; API/validation added next) */}
-      <form onSubmit={onProceed} className="mx-auto mt-10 max-w-md px-4">
-        <h1 className="mb-6 text-2xl font-semibold">Introduce Yourself</h1>
-
-        <label className="mb-3 block text-sm font-medium">Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="mb-5 w-full rounded border border-[#1A1B1C]/30 px-3 py-2 outline-none focus:border-[#1A1B1C]"
-          placeholder="John Doe"
-        />
-
-        <label className="mb-3 block text-sm font-medium">Location</label>
-        <input
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="mb-8 w-full rounded border border-[#1A1B1C]/30 px-3 py-2 outline-none focus:border-[#1A1B1C]"
-          placeholder="New York"
-        />
-
-        <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={onBack}
-            className="rounded border border-[#1A1B1C] px-4 py-2 text-sm hover:bg-[#1A1B1C] hover:text-white transition"
-          >
-            Back
-          </button>
-
-            <button
-              type="submit"
-              className="rounded bg-[#1A1B1C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition"
-            >
-              Proceed
-            </button>
+      <main className="relative flex-1">
+        <div className="px-4 sm:px-6 lg:px-8 mt-1">
+          <p className="text-[16px] font-semibold uppercase tracking-[-0.02em]">
+            TO START ANALYSIS
+          </p>
         </div>
-      </form>
-    </main>
+
+        {/* Center stage */}
+        <section className="relative z-0 mx-auto flex h-[calc(100vh-11rem)] max-w-[1200px] items-center justify-center">
+          <div className="relative -translate-y-6">
+            {/* Rotating diamonds — darker per layer */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="origin-center scale-[0.53] md:scale-100">
+                <RotatingDiamondStack
+                  size={602}
+                  // Even darker: tweak these three numbers if you need more/less.
+                  layerOpacities={[0.9, 0.96, 0.9]}
+                />
+              </div>
+            </div>
+
+            {/* Step content */}
+            <div className="relative z-10">
+              {step === "name" && (
+                <Prompt
+                  placeholder="Introduce Yourself"
+                  value={name}
+                  onChange={setName}
+                  onEnter={advanceFromName}
+                />
+              )}
+
+              {step === "city" && (
+                <Prompt
+                  placeholder="your city name"
+                  value={city}
+                  onChange={setCity}
+                  onEnter={advanceFromCity}
+                />
+              )}
+
+              {step === "processing" && (
+                <div className="relative z-10 text-center">
+                  <p className="text-[13px] text-[#8a8f95]">Processing submission</p>
+                  <div className="mt-4 flex items-center justify-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#c6c9cd] animate-bounce-x" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#c6c9cd] animate-bounce-x [animation-delay:.12s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#c6c9cd] animate-bounce-x [animation-delay:.24s]" />
+                  </div>
+                </div>
+              )}
+
+              {step === "done" && (
+                <div className="relative z-10 text-center">
+                  <p className="text-[22px] md:text-[26px] font-medium">Thank you!</p>
+                  <p className="mt-2 text-[13px] text-[#8a8f95]">
+                    Proceed for the next step
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Bottom-left BACK */}
+        <div className="absolute bottom-6 left-4 md:left-6">
+          <button
+            onClick={goBack}
+            className="inline-flex items-center gap-3 text-xs font-semibold tracking-wide"
+          >
+            <span
+              aria-hidden
+              className="relative inline-flex h-6 w-6 rotate-45 items-center justify-center border border-[#1A1B1C]"
+            >
+              <img
+                src="/assets/PolygonLeft.png"
+                alt=""
+                className="absolute -rotate-45 h-2.5 w-2.5 select-none"
+                draggable={false}
+              />
+            </span>
+            <span>BACK</span>
+          </button>
+        </div>
+
+        {/* Bottom-right PROCEED (only on final step) */}
+        {step === "done" && (
+          <div className="absolute bottom-6 right-4 md:right-6">
+            <DiamondButton label="PROCEED" direction="right" to="#" />
+            <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

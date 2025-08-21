@@ -1,27 +1,28 @@
+/* src/styles.css (Tailwind v4) */
 @import "tailwindcss";
 
 /* ---------- Base tokens ---------- */
 @layer base {
   :root {
+    --radius: 1.25rem;
+
+    /* brand + stroke defaults */
     --brand: #1A1B1C;
     --brand-muted: #1a1b1c83;
 
-    /* Diamond stroke defaults */
     --diamond-stroke-color: #A0A4AB;
     --diamond-stroke-width: 2px;
     --diamond-gap: 3px; /* tight dots */
   }
 
   html {
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-      Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
-      "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     color: var(--brand);
   }
 }
 
 /* ---------- Components ---------- */
 @layer components {
+  /* container helper we’ll reuse across pages */
   .container-tight {
     margin-left: auto;
     margin-right: auto;
@@ -35,19 +36,46 @@
 
 /* ---------- Utilities ---------- */
 @layer utilities {
+  /* hide scrollbars but keep scroll */
   .scrollbar-none::-webkit-scrollbar { display: none; }
   .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* SVG dotted stroke used by HalfDiamond */
+  /* Dotted stroke utilities for SVG/graphics and PNG outlines */
   .diamond-stroke {
     stroke: var(--diamond-stroke-color);
     stroke-width: var(--diamond-stroke-width);
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
-    stroke-dasharray: 0.001 var(--diamond-gap); /* tiny dash + gap ==> dotted */
+    stroke-dasharray: 0.001 var(--diamond-gap);
     fill: none;
   }
   .diamond-stroke-2 { --diamond-stroke-width: 2px; }
   .diamond-color-muted { --diamond-stroke-color: #A0A4AB; }
-  .diamond-gap-3 { --diamond-gap: 3px; }
+  .diamond-color-soft  { --diamond-stroke-color: #D4D4D8; }
+  .diamond-gap-2       { --diamond-gap: 2px; }
+  .diamond-gap-3       { --diamond-gap: 3px; }
+  .diamond-gap-4       { --diamond-gap: 4px; }
+
+  /* ===== Spin-in-place keyframes (include translate for centering) ===== */
+  @keyframes spin-around {
+    from { transform: translate(-50%, -50%) rotate(var(--start-rot, 0deg)); }
+    to   { transform: translate(-50%, -50%) rotate(calc(var(--start-rot, 0deg) + 360deg)); }
+  }
+
+  /* Speeds used by the three PNG layers */
+  .animate-spin-24s { animation: spin-around 24s linear infinite; }
+  .animate-spin-30s { animation: spin-around 30s linear infinite; }
+  .animate-spin-36s { animation: spin-around 36s linear infinite; }
+  .animate-spin-40s { animation: spin-around 40s linear infinite; }
+  .animate-spin-45s { animation: spin-around 45s linear infinite; }
+  .animate-spin-slowest { animation: spin-around 50s linear infinite; }
+
+  /* Tiny loader dots used in "Processing submission..." */
+  @keyframes bounceX {
+    0%, 80%, 100% { transform: translateY(0); opacity: .7; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+  .animate-bounce-x { animation: bounceX 1.2s ease-in-out infinite; }
 }
+
+/* page-specific motion stays in components; globals stay lean */
