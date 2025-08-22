@@ -167,9 +167,9 @@ export default function Testing() {
           </button>
         </div>
 
-        {/* Bottom-right PROCEED — diamond to the RIGHT of the word */}
+        {/* Bottom-right PROCEED — diamond to the RIGHT of the word + enter animation */}
         {step === "done" && (
-          <div className="absolute bottom-6 right-4 md:right-6">
+          <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
             <DiamondButton
               label="PROCEED"
               direction="right"
@@ -177,7 +177,7 @@ export default function Testing() {
               size="md"
               to="#"
             />
-            {/* click-through target if you wire up later */}
+            {/* If you need it to actually navigate, call onProceed here instead of "#" */}
             <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
           </div>
         )}
