@@ -1,6 +1,4 @@
 // src/pages/Testing.tsx
-// Diamonds are now darker via per-layer opacities.
-
 import { useState, useRef } from "react";
 import Header from "../components/Header";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
@@ -55,17 +53,15 @@ export default function Testing() {
       <p className="mb-3 text-[14px] leading-[24px] uppercase text-[#1A1B1C]/40">
         {labelTop}
       </p>
-      {/* fixed underline width: 420 / 540 */}
-      <div className="mx-auto w-[420px] md:w-[540px]">
+      {/* shorter underline */}
+      <div className="mx-auto w-[340px] md:w-[480px]">
         <input
           ref={inputRef}
           autoFocus
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") onEnter();
-          }}
+          onKeyDown={(e) => e.key === "Enter" && onEnter()}
           className="w-full bg-transparent text-center outline-none
                      text-[#1A1B1C] text-[60px] leading-[64px] tracking-[-0.07em] font-normal
                      border-b border-[#B8BCC1] placeholder:text-[#8a8f95]"
@@ -88,14 +84,16 @@ export default function Testing() {
 
         {/* Center stage */}
         <section className="relative z-0 mx-auto flex h-[calc(100vh-11rem)] max-w-[1200px] items-center justify-center">
-          <div className="relative -translate-y-6">
-            {/* Rotating diamonds — darker per layer */}
+          {/* move the stack+prompt slightly higher */}
+          <div className="relative -translate-y-8">
+            {/* Rotating squares around the prompt */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <div className="origin-center scale-[0.53] md:scale-100">
+              <div className="origin-center scale-[0.70] md:scale-[1.20]">
                 <RotatingDiamondStack
                   size={602}
-                  // Even darker: tweak these three numbers if you need more/less.
-                  layerOpacities={[0.9, 0.96, 0.9]}
+                  layerOpacities={[0.55, 0.78, 0.98]}     // outer, middle, inner
+                  layerScales={[1.00, 0.92, 0.84]}        // outer > middle > inner
+                  layerBrightness={[1.18, 1.05, 0.92]}     // gentle lighten -> neutral -> darken
                 />
               </div>
             </div>
@@ -143,31 +141,43 @@ export default function Testing() {
           </div>
         </section>
 
-        {/* Bottom-left BACK */}
+        {/* Bottom-left BACK — bigger + hover */}
         <div className="absolute bottom-6 left-4 md:left-6">
           <button
             onClick={goBack}
-            className="inline-flex items-center gap-3 text-xs font-semibold tracking-wide"
+            className="group inline-flex items-center gap-3 text-sm font-semibold tracking-wide"
           >
             <span
               aria-hidden
-              className="relative inline-flex h-6 w-6 rotate-45 items-center justify-center border border-[#1A1B1C]"
+              className="relative inline-flex h-8 w-8 rotate-45 items-center justify-center border border-[#1A1B1C]
+                         transition-all duration-300 ease-out
+                         group-hover:scale-[1.06] group-hover:bg-black/5
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
             >
               <img
                 src="/assets/PolygonLeft.png"
                 alt=""
-                className="absolute -rotate-45 h-2.5 w-2.5 select-none"
+                className="absolute -rotate-45 h-3 w-3 select-none transition-transform duration-300 ease-out group-hover:-translate-x-[2px]"
                 draggable={false}
               />
             </span>
-            <span>BACK</span>
+            <span className="uppercase transition-colors duration-300 ease-out group-hover:text-black">
+              BACK
+            </span>
           </button>
         </div>
 
-        {/* Bottom-right PROCEED (only on final step) */}
+        {/* Bottom-right PROCEED — diamond to the RIGHT of the word */}
         {step === "done" && (
           <div className="absolute bottom-6 right-4 md:right-6">
-            <DiamondButton label="PROCEED" direction="right" to="#" />
+            <DiamondButton
+              label="PROCEED"
+              direction="right"
+              iconPosition="trailing"
+              size="md"
+              to="#"
+            />
+            {/* click-through target if you wire up later */}
             <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
           </div>
         )}
