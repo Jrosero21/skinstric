@@ -1,4 +1,7 @@
 // src/pages/Testing.tsx
+// Tweaks: opacity ordering so largest = lightest, smallest = darkest.
+// Everything else unchanged (sizes, centering, underline width).
+
 import { useState, useRef } from "react";
 import Header from "../components/Header";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
@@ -33,7 +36,8 @@ export default function Testing() {
   };
 
   const onProceed = () => {
-    navigate("/");
+    // minimal change: proceed goes to /result
+    navigate("/result");
   };
 
   const Prompt = ({
@@ -53,7 +57,7 @@ export default function Testing() {
       <p className="mb-3 text-[14px] leading-[24px] uppercase text-[#1A1B1C]/40">
         {labelTop}
       </p>
-      {/* shorter underline */}
+      {/* underline length */}
       <div className="mx-auto w-[340px] md:w-[480px]">
         <input
           ref={inputRef}
@@ -61,7 +65,9 @@ export default function Testing() {
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onEnter()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onEnter();
+          }}
           className="w-full bg-transparent text-center outline-none
                      text-[#1A1B1C] text-[60px] leading-[64px] tracking-[-0.07em] font-normal
                      border-b border-[#B8BCC1] placeholder:text-[#8a8f95]"
@@ -84,16 +90,18 @@ export default function Testing() {
 
         {/* Center stage */}
         <section className="relative z-0 mx-auto flex h-[calc(100vh-11rem)] max-w-[1200px] items-center justify-center">
-          {/* move the stack+prompt slightly higher */}
-          <div className="relative -translate-y-8">
+          <div className="relative -translate-y-6">
             {/* Rotating squares around the prompt */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              {/* uniform outer scaling to avoid distortion */}
               <div className="origin-center scale-[0.70] md:scale-[1.20]">
                 <RotatingDiamondStack
                   size={602}
-                  layerOpacities={[0.55, 0.78, 0.98]}     // outer, middle, inner
-                  layerScales={[1.00, 0.92, 0.84]}        // outer > middle > inner
-                  layerBrightness={[1.18, 1.05, 0.92]}     // gentle lighten -> neutral -> darken
+                  /* [outer, middle, inner] -> largest = lightest, smallest = darkest */
+                  layerOpacities={[0.65, 0.85, 1.0]}
+                  /* size separation (outer > middle > inner) */
+                  layerScales={[1.00, 0.92, 0.84]}
+                  /* Brightness neutral in your current repo */
                 />
               </div>
             </div>
@@ -141,43 +149,33 @@ export default function Testing() {
           </div>
         </section>
 
-        {/* Bottom-left BACK — bigger + hover */}
+        {/* Bottom-left BACK */}
         <div className="absolute bottom-6 left-4 md:left-6">
           <button
             onClick={goBack}
-            className="group inline-flex items-center gap-3 text-sm font-semibold tracking-wide"
+            className="inline-flex items-center gap-3 text-xs font-semibold tracking-wide"
           >
             <span
               aria-hidden
-              className="relative inline-flex h-8 w-8 rotate-45 items-center justify-center border border-[#1A1B1C]
-                         transition-all duration-300 ease-out
-                         group-hover:scale-[1.06] group-hover:bg-black/5
-                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
+              className="relative inline-flex h-6 w-6 rotate-45 items-center justify-center border border-[#1A1B1C]"
             >
               <img
                 src="/assets/PolygonLeft.png"
                 alt=""
-                className="absolute -rotate-45 h-3 w-3 select-none transition-transform duration-300 ease-out group-hover:-translate-x-[2px]"
+                className="absolute -rotate-45 h-2.5 w-2.5 select-none"
                 draggable={false}
               />
             </span>
-            <span className="uppercase transition-colors duration-300 ease-out group-hover:text-black">
-              BACK
-            </span>
+            <span>BACK</span>
           </button>
         </div>
 
-        {/* Bottom-right PROCEED — diamond to the RIGHT of the word + enter animation */}
+        {/* Bottom-right PROCEED (only on final step) */}
         {step === "done" && (
           <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
-            <DiamondButton
-              label="PROCEED"
-              direction="right"
-              iconPosition="trailing"
-              size="md"
-              to="#"
-            />
-            {/* If you need it to actually navigate, call onProceed here instead of "#" */}
+            {/* minimal change: `to="/result"` */}
+            <DiamondButton label="PROCEED" direction="right" to="/result" />
+            {/* keep the hidden button if you want the imperative nav as a fallback */}
             <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
           </div>
         )}

@@ -1,10 +1,14 @@
 // src/App.jsx
-import React from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Testing from "./pages/Testing"
-import Results from "./pages/Results"
-import Selfie from "./pages/Selfie"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// These imports work whether the pages are .tsx or .jsx
+import Home from "./pages/Home";
+import Testing from "./pages/Testing";
+import Result from "./pages/Result";
+
+// IMPORTANT:
+// - main.tsx should NOT wrap <App/> with another <BrowserRouter>
+// - Keep exactly one router in the app (here in App.jsx)
 
 export default function App() {
   return (
@@ -12,9 +16,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/testing" element={<Testing />} />
-        <Route path="/results" element={<Results />} />
-        <Route path="/selfie" element={<Selfie />} />
+        <Route path="/result" element={<Result />} />
+        {/* optional: catch-all */}
+        <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
