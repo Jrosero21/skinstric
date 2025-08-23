@@ -3,14 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
+import CameraCaptureModal from "../components/camera/CameraCaptureModal";
 
 const BASE = 482; // diamond base size
 
 export default function Result() {
   const [previewUrl, setPreviewUrl] = useState(null);
 
+  // hidden inputs remain for fallback (gallery + camera fallback on old browsers)
   const camRef = useRef(null);
   const galRef = useRef(null);
+
+  // modal for live camera
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraUnsupported, setCameraUnsupported] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -30,12 +36,34 @@ export default function Result() {
     });
   };
 
+  // open the live camera modal (with graceful fallback to input if not supported)
+  const openCamera = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      setCameraUnsupported(false);
+      setCameraOpen(true);
+    } else {
+      setCameraUnsupported(true);
+      camRef.current?.click();
+    }
+  };
+
+  // when a frame is captured from the modal
+  const handleCaptureBlob = (blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    setPreviewUrl((old) => {
+      if (old && old.startsWith("blob:")) URL.revokeObjectURL(old);
+      return url;
+    });
+    setCameraOpen(false);
+  };
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
 
       {/* Start Analysis section */}
-      <section className="min-h-[92vh] flex flex-col bg-white relative md:pt-[64px] justify-center">
+      <section className="min-h-[92vh] flex flex-col bg-white relative md:pt-[64px] justify-center overflow-hidden">
         {/* TOP-LEFT label */}
         <div className="absolute top-2 left-9 md:left-8 text-left z-40">
           <p className="font-semibold text-xs md:text-sm tracking-[0.02em]">
@@ -69,7 +97,7 @@ export default function Result() {
                 alt="Camera Icon"
                 width={136}
                 height={136}
-                onClick={() => camRef.current?.click()}
+                onClick={openCamera}
                 className="absolute w-[100px] h-[100px] md:w-[136px] md:h-[136px] hover:scale-105 duration-700 ease-in-out cursor-pointer"
               />
               <div className="absolute bottom-[1%] right-[90px] md:top-[30.9%] md:right-[-12px] translate-y-[-20px] select-none">
@@ -130,7 +158,7 @@ export default function Result() {
           </div>
         </div>
 
-        {/* hidden inputs */}
+        {/* hidden inputs (fallbacks) */}
         <input
           ref={camRef}
           type="file"
@@ -147,6 +175,14 @@ export default function Result() {
           onChange={handlePick}
         />
       </section>
+
+      {/* Live camera capture modal (only opens if supported) */}
+      <CameraCaptureModal
+        open={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onCapture={handleCaptureBlob}
+        onFallback={() => camRef.current?.click()}
+      />
     </main>
   );
 }
@@ -158,7 +194,7 @@ function ResultDiamonds({ startAngles, size, className }) {
       <RotatingDiamondStack
         size={size}
         layerScales={[1.0, 0.92, 0.84]}
-        layerOpacities={[0.5, 0.7, 0.9]}
+        layerOpacities={[0.5, 0.7, 0.9]} // darker: largest lightest, smallest darkest
         startAngles={startAngles}
         spinClasses={["animate-spin-40s", "animate-spin-30s", "animate-spin-24s"]}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
