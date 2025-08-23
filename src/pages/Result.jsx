@@ -158,7 +158,7 @@ function ResultDiamonds({ startAngles, size, className }) {
       <RotatingDiamondStack
         size={size}
         layerScales={[1.0, 0.92, 0.84]}
-        layerOpacities={[0.22, 0.32, 0.48]}
+        layerOpacities={[0.5, 0.7, 0.9]}
         startAngles={startAngles}
         spinClasses={["animate-spin-40s", "animate-spin-30s", "animate-spin-24s"]}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
