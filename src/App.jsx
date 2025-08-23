@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Testing from "./pages/Testing";
 import Result from "./pages/Result";
+import CameraLoading from "./pages/CameraLoading";
 
 // IMPORTANT:
 // - main.tsx should NOT wrap <App/> with another <BrowserRouter>
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/testing" element={<Testing />} />
         <Route path="/result" element={<Result />} />
+        <Route path="/camera" element={<CameraLoading />} />
         {/* optional: catch-all */}
         <Route path="*" element={<Home />} />
       </Routes>

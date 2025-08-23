@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
 import CameraCaptureModal from "../components/camera/CameraCaptureModal";
+import { useNavigate } from "react-router-dom";
 
 const BASE = 482;
 
@@ -18,6 +19,8 @@ export default function Result() {
 
   // camera permission prompt
   const [showCamPrompt, setShowCamPrompt] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
@@ -150,7 +153,7 @@ export default function Result() {
         onFallback={() => camRef.current?.click()}
       />
 
-      {/* Camera permission prompt — no page tint; prompt itself is translucent */}
+      {/* Camera permission prompt — unchanged styles */}
       {showCamPrompt && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center">
           <div className="inline-block w-auto max-w-[92vw] shadow-2xl">
@@ -168,7 +171,10 @@ export default function Result() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowCamPrompt(false)}
+                  onClick={() => {
+                    setShowCamPrompt(false);
+                    navigate("/camera");
+                  }}
                   className="px-3 text-[#FCFCFC] font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
                 >
                   ALLOW
