@@ -1,159 +1,168 @@
 // src/pages/Result.jsx
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
 
-/** Read a File to base64 preview */
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onerror = () => reject(new Error("Failed to read file"));
-    r.onload = () => resolve(String(r.result));
-    r.readAsDataURL(file);
-  });
-}
+const BASE = 482; // diamond base size
 
 export default function Result() {
-  const [preview, setPreview] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
-  const galleryRef = useRef(null);
-  const cameraRef = useRef(null);
+  const camRef = useRef(null);
+  const galRef = useRef(null);
 
-  const onPick = useCallback(async (file) => {
-    if (!file) return;
-    const b64 = await fileToBase64(file);
-    setPreview(b64);
-    try {
-      localStorage.setItem("skinstric:imageBase64", b64);
-    } catch {}
-  }, []);
+  useEffect(() => {
+    return () => {
+      if (previewUrl && typeof previewUrl === "string" && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
-  const openGallery = () => galleryRef.current?.click();
-  const openCamera = () => cameraRef.current?.click();
-
-  // Slightly different spin speeds per side for a subtle variance
-  const leftStack = useMemo(
-    () => ({ size: 620, speeds: ["animate-spin-36s", "animate-spin-30s", "animate-spin-24s"] }),
-    []
-  );
-  const rightStack = useMemo(
-    () => ({ size: 620, speeds: ["animate-spin-45s", "animate-spin-36s", "animate-spin-30s"] }),
-    []
-  );
+  const handlePick = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    setPreviewUrl((old) => {
+      if (old && old.startsWith("blob:")) URL.revokeObjectURL(old);
+      return url;
+    });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1A1B1C]">
+    <main className="min-h-screen bg-white">
       <Header />
 
-      <main className="relative flex-1">
-        {/* top helper line (matches Testing page tone) */}
-        <div className="px-6 sm:px-8 md:px-10 mt-1 text-[10px] tracking-wide uppercase">
-          To start analysis
+      {/* Start Analysis section */}
+      <section className="min-h-[92vh] flex flex-col bg-white relative md:pt-[64px] justify-center">
+        {/* TOP-LEFT label */}
+        <div className="absolute top-2 left-9 md:left-8 text-left z-40">
+          <p className="font-semibold text-xs md:text-sm tracking-[0.02em]">
+            TO START ANALYSIS
+          </p>
         </div>
 
-        {/* Preview box (top-right) */}
-        <aside className="absolute right-6 top-16">
-          <div className="text-[10px] mb-2 opacity-80">Preview</div>
-          <div className="w-[128px] h-[128px] border border-dotted border-[#A0A4AB] bg-white grid place-items-center overflow-hidden">
-            {preview ? (
+        {/* TOP-RIGHT preview (label aligned to the box’s left edge) */}
+        <div className="absolute right-7 md:right-8 top-2 md:top-4 z-40 text-left">
+          <h2 className="text-xs md:text-sm font-normal mb-1">Preview</h2>
+          <div className="w-24 h-24 md:w-32 md:h-32 border border-gray-300 bg-white overflow-hidden">
+            {previewUrl ? (
+              <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+            ) : null}
+          </div>
+        </div>
+
+        {/* MAIN STAGE */}
+        <div className="flex-[0.4] md:flex-1 flex flex-col md:flex-row items-center xl:justify-center relative mb-0 md:mb-30 space-y-[-20px] md:space-y-0">
+          {/* LEFT: Camera */}
+          <div className="relative md:absolute md:left-[55%] lg:left-[50%] xl:left-[40%] md:-translate-y-[0%] -translate-y-[1%] md:-translate-x-full flex flex-col items-center justify-center">
+            <div className="w-[270px] h-[270px] md:w-[482px] md:h-[482px]" />
+            <ResultDiamonds
+              startAngles={[200, 190, 0]}
+              size={BASE}
+              className="absolute w-[270px] h-[270px] md:w-[482px] md:h-[482px]"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
               <img
-                src={preview}
-                alt="Selected preview"
-                className="max-w-full max-h-full object-contain"
+                src="/assets/camera-icon.png"
+                alt="Camera Icon"
+                width={136}
+                height={136}
+                onClick={() => camRef.current?.click()}
+                className="absolute w-[100px] h-[100px] md:w-[136px] md:h-[136px] hover:scale-105 duration-700 ease-in-out cursor-pointer"
               />
-            ) : (
-              <div className="text-[10px] text-[#1a1b1c83]">No image</div>
-            )}
-          </div>
-        </aside>
-
-        {/* Two action zones */}
-        <section className="relative mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-20">
-          {/* LEFT: Camera / Scan your face */}
-          <div className="relative flex items-center justify-center py-16">
-            {/* rotating dotted stack */}
-            <div className="pointer-events-none absolute inset-0 grid place-items-center">
-              <RotatingDiamondStack
-                size={leftStack.size}
-                speeds={leftStack.speeds}
-                opacities={[0.18, 0.22, 0.28]}
-              />
+              <div className="absolute bottom-[1%] right-[90px] md:top-[30.9%] md:right-[-12px] translate-y-[-20px] select-none">
+                <p className="text-xs md:text-sm font-normal mt-1 leading-[24px]">
+                  ALLOW A.I.
+                  <br />
+                  TO SCAN YOUR FACE
+                </p>
+                <img
+                  src="/assets/ResScanLine.png"
+                  alt=""
+                  className="absolute hidden md:block md:right-[143px] md:top-[20px]"
+                />
+              </div>
             </div>
-
-            <button
-              type="button"
-              onClick={openCamera}
-              className="relative z-10 group grid place-items-center"
-              aria-label="Allow A.I. to scan your face (open camera)"
-            >
-              {/* circular button w/ camera icon */}
-              <div className="w-[92px] h-[92px] rounded-full border-2 border-[#1A1B1C] grid place-items-center bg-white shadow-sm transition group-hover:scale-[1.03]">
-                <img src="/assets/camera-icon.png" alt="" className="w-10 h-10" />
-              </div>
-
-              {/* callout label to the right */}
-              <div className="absolute left-[120px] top-1/2 -translate-y-1/2 text-left">
-                <div className="text-[10px] uppercase tracking-wide">Allow A.I.</div>
-                <div className="text-[10px] uppercase tracking-wide">To scan your face</div>
-              </div>
-            </button>
-
-            {/* Hidden camera input (mobile can use device camera) */}
-            <input
-              ref={cameraRef}
-              type="file"
-              accept="image/*"
-              capture="user"
-              className="hidden"
-              onChange={(e) => onPick(e.target.files?.[0] ?? null)}
-            />
           </div>
 
-          {/* RIGHT: Gallery / Access gallery */}
-          <div className="relative flex items-center justify-center py-16">
-            {/* rotating dotted stack */}
-            <div className="pointer-events-none absolute inset-0 grid place-items-center">
-              <RotatingDiamondStack
-                size={rightStack.size}
-                speeds={rightStack.speeds}
-                opacities={[0.18, 0.22, 0.28]}
+          {/* RIGHT: Gallery */}
+          <div className="relative md:absolute md:left-[45%] lg:left-[50%] xl:left-[55%] flex flex-col items-center mt-12 md:mt-0 justify-center md:-translate-y-[0%] -translate-y-[10%] transition-opacity duration-300">
+            <div className="w-[270px] h-[270px] md:w-[482px] md:h-[482px]" />
+            <ResultDiamonds
+              startAngles={[205, 195, 0]}
+              size={BASE}
+              className="absolute w-[270px] h-[270px] md:w-[482px] md:h-[482px]"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <img
+                src="/assets/gallery-icon.png"
+                alt="Photo Upload Icon"
+                width={136}
+                height={136}
+                onClick={() => galRef.current?.click()}
+                className="absolute w-[100px] h-[100px] md:w-[136px] md:h-[136px] hover:scale-105 duration-700 ease-in-out cursor-pointer"
               />
+              <div className="absolute top-[75%] md:top-[70%] md:left-[17px] translate-y-[-10px] select-none">
+                <p className="text-[12px] md:text-[14px] font-normal mt-2 leading-[24px] text-right">
+                  ALLOW A.I.
+                  <br />
+                  ACCESS GALLERY
+                </p>
+                <img
+                  src="/assets/ResGalleryLine.png"
+                  alt=""
+                  className="absolute hidden md:block md:left-[120px] md:bottom-[39px]"
+                />
+              </div>
             </div>
-
-            <button
-              type="button"
-              onClick={openGallery}
-              className="relative z-10 group grid place-items-center"
-              aria-label="Allow A.I. to access gallery (pick image)"
-            >
-              <div className="w-[92px] h-[92px] rounded-full border-2 border-[#1A1B1C] grid place-items-center bg-white shadow-sm transition group-hover:scale-[1.03]">
-                <img src="/assets/gallery-icon.png" alt="" className="w-10 h-10" />
-              </div>
-
-              {/* callout label to the left */}
-              <div className="absolute right-[120px] top-1/2 -translate-y-1/2 text-right">
-                <div className="text-[10px] uppercase tracking-wide">Allow A.I.</div>
-                <div className="text-[10px] uppercase tracking-wide">Access gallery</div>
-              </div>
-            </button>
-
-            {/* Hidden gallery input */}
-            <input
-              ref={galleryRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => onPick(e.target.files?.[0] ?? null)}
-            />
           </div>
-        </section>
-
-        {/* Back (bottom-left) */}
-        <div className="absolute left-6 bottom-6">
-          <DiamondButton label="BACK" direction="left" to={-1} />
         </div>
-      </main>
+
+        {/* Bottom overlay (inside the same section) */}
+        <div className="absolute bottom-8 left-0 right-0 z-40">
+          <div className="w-full flex justify-between md:px-9 px-13">
+            <DiamondButton to="/testing" direction="left" label="BACK" />
+            <div className="opacity-0 pointer-events-none">
+              <DiamondButton to="/select" direction="right" label="PROCEED" />
+            </div>
+          </div>
+        </div>
+
+        {/* hidden inputs */}
+        <input
+          ref={camRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={handlePick}
+        />
+        <input
+          ref={galRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handlePick}
+        />
+      </section>
+    </main>
+  );
+}
+
+/* simple local wrapper for the rotating PNG stack */
+function ResultDiamonds({ startAngles, size, className }) {
+  return (
+    <div className={className}>
+      <RotatingDiamondStack
+        size={size}
+        layerScales={[1.0, 0.92, 0.84]}
+        layerOpacities={[0.22, 0.32, 0.48]}
+        startAngles={startAngles}
+        spinClasses={["animate-spin-40s", "animate-spin-30s", "animate-spin-24s"]}
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      />
     </div>
   );
 }

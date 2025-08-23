@@ -88,3 +88,14 @@
     animation: fadeSlideInLeft 900ms cubic-bezier(0.19,1,0.22,1) both; /* a bit longer */
   }
 }
+
+@keyframes spin-around {
+  from { transform: translate(-50%, -50%) rotate(var(--start-rot, 0deg)); }
+  to   { transform: translate(-50%, -50%) rotate(calc(var(--start-rot, 0deg) + 360deg)); }
+}
+.animate-spin-24s { animation: spin-around 24s linear infinite; }
+.animate-spin-30s { animation: spin-around 30s linear infinite; }
+.animate-spin-36s { animation: spin-around 36s linear infinite; }
+.animate-spin-40s { animation: spin-around 40s linear infinite; }
+.animate-spin-45s { animation: spin-around 45s linear infinite; }
+
