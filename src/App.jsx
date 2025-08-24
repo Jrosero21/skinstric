@@ -1,15 +1,14 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// These imports work whether the pages are .tsx or .jsx
 import Home from "./pages/Home";
 import Testing from "./pages/Testing";
 import Result from "./pages/Result";
-import CameraLoading from "./pages/CameraLoading";
 
-// IMPORTANT:
-// - main.tsx should NOT wrap <App/> with another <BrowserRouter>
-// - Keep exactly one router in the app (here in App.jsx)
+// Camera routes (parent + children)
+import CameraLayout from "./pages/Camera/CameraLayout";
+import CameraLoading from "./pages/CameraLoading";
+import Capture from "./pages/Camera/Capture";
 
 export default function App() {
   return (
@@ -18,8 +17,15 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/testing" element={<Testing />} />
         <Route path="/result" element={<Result />} />
-        <Route path="/camera" element={<CameraLoading />} />
-        {/* optional: catch-all */}
+
+        {/* /camera -> layout keeps the MediaStream alive */}
+        <Route path="/camera" element={<CameraLayout />}>
+          {/* index == /camera */}
+          <Route index element={<CameraLoading />} />
+          {/* /camera/capture */}
+          <Route path="capture" element={<Capture />} />
+        </Route>
+
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
