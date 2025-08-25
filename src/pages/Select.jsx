@@ -66,29 +66,20 @@ export default function Select() {
           <div className="scale-[0.75] md:scale-100">
             {/* cluster wrapper with tight, non-touching spacing */}
             <div className="relative w-[230px] h-[230px] md:w-[292px] md:h-[292px]">
-              {/* --- HOVER HALO (appears when any tile hovered) --- */}
-              {hoveredKey && (
-                <div className="pointer-events-none absolute inset-0">
-                  <svg
-                    width="100%"
-                    height="100%"
-                    viewBox="0 0 100 100"
-                    className="absolute left-1/2 top-1/2 animate-spin-36s opacity-70 transition-opacity duration-200"
-                    style={{
-                      // use the global keyframes that include translate for centering
-                      // so this element stays centered while rotating
-                      // @ts-ignore (JS file; allow CSS var)
-                      "--start-rot": "0deg",
-                    }}
-                  >
-                    {/* make the ring slightly larger than cluster by using 92x92 inside 100x100 viewBox */}
-                    <polygon
-                      points="50,4 96,50 50,96 4,50"
-                      className="diamond-stroke diamond-stroke-2 diamond-color-muted"
-                    />
-                  </svg>
-                </div>
-              )}
+              {/* --- HOVER HALO (bigger + smooth ease-in fade; no rotation) --- */}
+              <div className="pointer-events-none absolute inset-0">
+                <svg
+                  viewBox="0 0 100 100"
+                  className={`absolute left-1/2 top-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 ease-in ${
+                    hoveredKey ? "opacity-80" : "opacity-0"
+                  }`}
+                >
+                  <polygon
+                    points="50,0 100,50 50,100 0,50"
+                    className="diamond-stroke diamond-stroke-2 diamond-color-muted"
+                  />
+                </svg>
+              </div>
 
               {/* top — ONLY clickable with subtle zoom hover */}
               <div className="absolute left-1/2 -translate-x-1/2 top-0 translate-y-[-16px] md:translate-y-[-18px]">
