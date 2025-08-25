@@ -35,7 +35,7 @@ export default function Select() {
     <main className="min-h-screen bg-white">
       <Header />
 
-      {/* MAIN SECTION LAYOUT (matches your screenshot bands) */}
+      {/* MAIN SECTION LAYOUT */}
       <section className="min-h-[92vh] relative md:pt-[64px] flex flex-col bg-white">
         {/* top-left copy */}
         <div className="absolute top-6 left-8 text-left">
@@ -51,32 +51,32 @@ export default function Select() {
 
         {/* CENTER BAND — flex row, pt-1, items-center, justify-center */}
         <div className="flex-1 flex flex-row pt-1 items-center justify-center">
-          {/* optional scale to fine-tune visual size without changing tile dims */}
           <div className="scale-[0.75] md:scale-100">
-            <div className="relative w-[310px] h-[310px] md:w-[360px] md:h-[360px]">
+            {/* cluster wrapper — slightly larger + teeny offsets on each tile */}
+            <div className="relative w-[230px] h-[230px] md:w-[292px] md:h-[292px]">
               {/* top */}
-              <div className="absolute left-1/2 -translate-x-1/2 top-0">
+              <div className="absolute left-1/2 -translate-x-1/2 top-0 translate-y-[-16px] md:translate-y-[-18px]">
                 <DiamondTile
                   label="DEMOGRAPHICS"
                   onClick={() => handleTile("demographics")}
                 />
               </div>
               {/* left */}
-              <div className="absolute top-1/2 -translate-y-1/2 left-0">
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 translate-x-[-16px] md:translate-x-[-18px]">
                 <DiamondTile
                   label={"COSMETIC\nCONCERNS"}
                   onClick={() => handleTile("cosmetic")}
                 />
               </div>
               {/* right */}
-              <div className="absolute top-1/2 -translate-y-1/2 right-0">
+              <div className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-[16px] md:translate-x-[18px]">
                 <DiamondTile
                   label="SKIN TYPE DETAILS"
                   onClick={() => handleTile("skin")}
                 />
               </div>
               {/* bottom */}
-              <div className="absolute left-1/2 -translate-x-1/2 bottom-0">
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[16px] md:translate-y-[18px]">
                 <DiamondTile
                   label="WEATHER"
                   onClick={() => handleTile("weather")}
@@ -86,50 +86,42 @@ export default function Select() {
           </div>
         </div>
 
-        {/* BOTTOM WHITE BAR — sticky on mobile to mirror your DOM; static on md+ */}
+        {/* BOTTOM WHITE BAR — sticky on mobile; static on md+ */}
         <div className="pt-4 md:pt-12 pb-8 bg-white sticky md:static bottom-40 mb-0 md:mb-0">
-  <div className="flex justify-between max-w-full mx-auto px-13 md:px-9">
+          <div className="flex justify-between max-w-full mx-auto px-13 md:px-9">
+            {/* Back */}
+            <Link to="/result">
+              <div>
+                <div className="relative w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
+                  <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">BACK</span>
+                </div>
+                <div className="group hidden sm:flex flex-row relative justify-center items-center">
+                  <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
+                  <span className="absolute left-[15px] bottom-[13px] scale-[0.9] rotate-180 hidden sm:block group-hover:scale-[0.92] ease duration-300">
+                    ▶
+                  </span>
+                  <span className="text-sm font-semibold hidden sm:block ml-6">BACK</span>
+                </div>
+              </div>
+            </Link>
 
-    {/* Back */}
-    <Link to="/result">
-      <div>
-        {/* mobile: single diamond with label inside */}
-        <div className="relative w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
-          <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">BACK</span>
+            {/* Get Summary */}
+            <Link to="/summary">
+              <div>
+                <div className="w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
+                  <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">SUM</span>
+                </div>
+                <div className="group hidden sm:flex flex-row relative justify-center items-center">
+                  <span className="text-sm font-semibold hidden sm:block mr-5">GET SUMMARY</span>
+                  <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
+                  <span className="absolute right-[15px] bottom-[13px] scale-[0.9] hidden sm:block group-hover:scale-[0.92] ease duration-300">
+                    ▶
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
-
-        {/* desktop: diamond + arrow + label */}
-        <div className="group hidden sm:flex flex-row relative justify-center items-center">
-          <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
-          <span className="absolute left-[15px] bottom-[13px] scale-[0.9] rotate-180 hidden sm:block group-hover:scale-[0.92] ease duration-300">
-            ▶
-          </span>
-          <span className="text-sm font-semibold hidden sm:block ml-6">BACK</span>
-        </div>
-      </div>
-    </Link>
-
-    {/* Get Summary */}
-    <Link to="/summary">
-      <div>
-        {/* mobile: single diamond with tiny label */}
-        <div className="w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
-          <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">SUM</span>
-        </div>
-
-        {/* desktop: label + diamond + arrow */}
-        <div className="group hidden sm:flex flex-row relative justify-center items-center">
-          <span className="text-sm font-semibold hidden sm:block mr-5">GET SUMMARY</span>
-          <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
-          <span className="absolute right-[15px] bottom-[13px] scale-[0.9] hidden sm:block group-hover:scale-[0.92] ease duration-300">
-            ▶
-          </span>
-        </div>
-      </div>
-    </Link>
-
-  </div>
-</div>
       </section>
     </main>
   );
