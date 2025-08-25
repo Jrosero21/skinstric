@@ -5,7 +5,8 @@
 //   rank 0 = largest (outer), rank 1 = middle, rank 2 = smallest (inner).
 // NOTE: brightness is optional and mild by default so nothing can "disappear".
 
-import React from "react";
+
+
 
 type Props = {
   /** Outer (largest) design size in px; wrapper can be scaled responsively outside. */

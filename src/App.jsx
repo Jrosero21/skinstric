@@ -10,6 +10,9 @@ import CameraLayout from "./pages/Camera/CameraLayout";
 import CameraLoading from "./pages/CameraLoading";
 import Capture from "./pages/Camera/Capture";
 
+// NEW: target page after “Use This Photo”
+import Select from "./pages/Select";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -20,11 +23,12 @@ export default function App() {
 
         {/* /camera -> layout keeps the MediaStream alive */}
         <Route path="/camera" element={<CameraLayout />}>
-          {/* index == /camera */}
-          <Route index element={<CameraLoading />} />
-          {/* /camera/capture */}
-          <Route path="capture" element={<Capture />} />
+          <Route index element={<CameraLoading />} />   {/* /camera */}
+          <Route path="capture" element={<Capture />} />{/* /camera/capture */}
         </Route>
+
+        {/* After upload we navigate here */}
+        <Route path="/select" element={<Select />} />
 
         <Route path="*" element={<Home />} />
       </Routes>

@@ -1,7 +1,32 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.app.json" }
-  ]
+  "compilerOptions": {
+    // Target modern JS in browsers
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // React automatic JSX transform
+    "jsx": "react-jsx",
+
+    // Vite-friendly defaults that work across TS versions
+    "module": "ESNext",
+    "moduleResolution": "node",
+
+    // Safety / IDE features
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+
+    // Aliases + Vite client types
+    "baseUrl": ".",
+    "paths": {
+      "@/src/*": ["src/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["src", "env.d.ts"],
+  "exclude": ["node_modules"]
 }

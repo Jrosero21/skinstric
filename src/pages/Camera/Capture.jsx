@@ -1,5 +1,6 @@
 // src/pages/camera/Capture.jsx
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 
 function BackLite() {
@@ -28,6 +29,8 @@ export default function Capture() {
   const [captured, setCaptured] = useState(false);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let stream;
@@ -76,7 +79,7 @@ export default function Capture() {
     setAnalyzing(true);
     setTimeout(() => {
       setAnalyzing(false);
-      // navigate to next step later
+      navigate("/select");
     }, 1800);
   };
 
@@ -179,7 +182,6 @@ export default function Capture() {
           </div>
         )}
 
-        {/* ONLY CHANGE: taller loading panel (more bottom space), width untouched */}
         {analyzing && (
           <div className="absolute inset-0 z-30 flex items-center justify-center">
             <div className="rounded-md bg-gray-300/90 px-8 pt-6 pb-12 text-gray-800 shadow-lg">
@@ -197,7 +199,6 @@ export default function Capture() {
                   style={{ animationDelay: "0.3s" }}
                 />
               </div>
-              {/* extra vertical space below dots to square the panel */}
               <div className="h-6 md:h-8" />
             </div>
           </div>

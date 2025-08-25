@@ -1,22 +1,33 @@
 {
   "compilerOptions": {
+    // app target + browser libs
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // React automatic JSX
+    "jsx": "react-jsx",
+
+    // Vite / ESM settings
     "module": "ESNext",
-    "skipLibCheck": true,
+    "moduleResolution": "bundler",     // requires TS >= 5.3
+    "verbatimModuleSyntax": true,      // requires TS >= 5.0
 
-    /* Vite bundler mode */
-    "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
-
-    /* Safety flags */
+    // safety + IDE
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
 
-    /* No output for config files */
-    "noEmit": true
+    // path alias + vite client types
+    "baseUrl": ".",
+    "paths": {
+      "@/src/*": ["src/*"]
+    },
+    "types": ["vite/client"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["src", "env.d.ts"],
+  "exclude": ["node_modules"]
 }

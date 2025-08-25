@@ -1,0 +1,136 @@
+// src/pages/Select.jsx
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Header from "../components/Header";
+import DiamondButton from "../components/ui/DiamondButton";
+
+// small square rotated 45°, text un-rotated
+function DiamondTile({ label, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="
+        relative select-none cursor-pointer
+        w-[102px] h-[102px] md:w-[130px] md:h-[130px]
+        bg-[#EEF0F3] hover:bg-[#E6E9ED]
+        transition-colors duration-200
+        rotate-45
+        shadow-[0_0_0_1px_rgba(0,0,0,0.04)_inset]
+      "
+      aria-label={label}
+    >
+      <span className="absolute inset-0 -rotate-45 flex items-center justify-center text-[10px] md:text-[11px] font-semibold tracking-[0.02em] text-[#1A1B1C] text-center leading-[1.2] px-3 whitespace-pre-line">
+        {label}
+      </span>
+    </button>
+  );
+}
+
+export default function Select() {
+  const [lastClicked, setLastClicked] = useState(null);
+  const handleTile = (key) => setLastClicked(key);
+
+  return (
+    <main className="min-h-screen bg-white">
+      <Header />
+
+      {/* MAIN SECTION LAYOUT (matches your screenshot bands) */}
+      <section className="min-h-[92vh] relative md:pt-[64px] flex flex-col bg-white">
+        {/* top-left copy */}
+        <div className="absolute top-6 left-8 text-left">
+          <p className="text-[11px] md:text-xs font-bold tracking-wide text-[#1A1B1C]">
+            A.I. ANALYSIS
+          </p>
+          <p className="text-[10px] md:text-[11px] text-[#6B6F74] mt-2 leading-relaxed">
+            A.I. HAS ESTIMATED THE FOLLOWING.
+            <br />
+            FIX ESTIMATED INFORMATION IF NEEDED.
+          </p>
+        </div>
+
+        {/* CENTER BAND — flex row, pt-1, items-center, justify-center */}
+        <div className="flex-1 flex flex-row pt-1 items-center justify-center">
+          {/* optional scale to fine-tune visual size without changing tile dims */}
+          <div className="scale-[0.75] md:scale-100">
+            <div className="relative w-[310px] h-[310px] md:w-[360px] md:h-[360px]">
+              {/* top */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-0">
+                <DiamondTile
+                  label="DEMOGRAPHICS"
+                  onClick={() => handleTile("demographics")}
+                />
+              </div>
+              {/* left */}
+              <div className="absolute top-1/2 -translate-y-1/2 left-0">
+                <DiamondTile
+                  label={"COSMETIC\nCONCERNS"}
+                  onClick={() => handleTile("cosmetic")}
+                />
+              </div>
+              {/* right */}
+              <div className="absolute top-1/2 -translate-y-1/2 right-0">
+                <DiamondTile
+                  label="SKIN TYPE DETAILS"
+                  onClick={() => handleTile("skin")}
+                />
+              </div>
+              {/* bottom */}
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-0">
+                <DiamondTile
+                  label="WEATHER"
+                  onClick={() => handleTile("weather")}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM WHITE BAR — sticky on mobile to mirror your DOM; static on md+ */}
+        <div className="pt-4 md:pt-12 pb-8 bg-white sticky md:static bottom-40 mb-0 md:mb-0">
+  <div className="flex justify-between max-w-full mx-auto px-13 md:px-9">
+
+    {/* Back */}
+    <Link to="/result">
+      <div>
+        {/* mobile: single diamond with label inside */}
+        <div className="relative w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
+          <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">BACK</span>
+        </div>
+
+        {/* desktop: diamond + arrow + label */}
+        <div className="group hidden sm:flex flex-row relative justify-center items-center">
+          <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
+          <span className="absolute left-[15px] bottom-[13px] scale-[0.9] rotate-180 hidden sm:block group-hover:scale-[0.92] ease duration-300">
+            ▶
+          </span>
+          <span className="text-sm font-semibold hidden sm:block ml-6">BACK</span>
+        </div>
+      </div>
+    </Link>
+
+    {/* Get Summary */}
+    <Link to="/summary">
+      <div>
+        {/* mobile: single diamond with tiny label */}
+        <div className="w-12 h-12 flex items-center justify-center border border-[#1A1B1C] rotate-45 scale-[1] sm:hidden">
+          <span className="rotate-[-45deg] text-xs font-semibold sm:hidden">SUM</span>
+        </div>
+
+        {/* desktop: label + diamond + arrow */}
+        <div className="group hidden sm:flex flex-row relative justify-center items-center">
+          <span className="text-sm font-semibold hidden sm:block mr-5">GET SUMMARY</span>
+          <div className="w-12 h-12 hidden sm:flex justify-center border border-[#1A1B1C] rotate-45 scale-[0.85] group-hover:scale-[0.92] ease duration-300" />
+          <span className="absolute right-[15px] bottom-[13px] scale-[0.9] hidden sm:block group-hover:scale-[0.92] ease duration-300">
+            ▶
+          </span>
+        </div>
+      </div>
+    </Link>
+
+  </div>
+</div>
+      </section>
+    </main>
+  );
+}
