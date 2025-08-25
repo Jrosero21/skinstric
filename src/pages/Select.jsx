@@ -4,26 +4,36 @@ import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
 
-// small square rotated 45°, text un-rotated
-function DiamondTile({ label, onClick }) {
+// Diamond tile. Clickable only when `clickable` is true.
+function DiamondTile({ label, onClick, clickable = false, className = "" }) {
+  const base =
+    "relative select-none w-[102px] h-[102px] md:w-[130px] md:h-[130px] " +
+    "bg-[#EEF0F3] hover:bg-[#E6E9ED] transition-colors duration-200 " +
+    "rotate-45 shadow-[0_0_0_1px_rgba(0,0,0,0.04)_inset]";
+  const inner =
+    "absolute inset-0 -rotate-45 flex items-center justify-center " +
+    "text-[10px] md:text-[11px] font-semibold tracking-[0.02em] " +
+    "text-[#1A1B1C] text-center leading-[1.2] px-3 whitespace-pre-line";
+
+  if (clickable) {
+    // clickable: show pointer and onClick
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={`${base} cursor-pointer ${className}`}
+        aria-label={label}
+      >
+        <span className={inner}>{label}</span>
+      </button>
+    );
+  }
+
+  // non-clickable: keep hover look but no pointer/interaction
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="
-        relative select-none cursor-pointer
-        w-[102px] h-[102px] md:w-[130px] md:h-[130px]
-        bg-[#EEF0F3] hover:bg-[#E6E9ED]
-        transition-colors duration-200
-        rotate-45
-        shadow-[0_0_0_1px_rgba(0,0,0,0.04)_inset]
-      "
-      aria-label={label}
-    >
-      <span className="absolute inset-0 -rotate-45 flex items-center justify-center text-[10px] md:text-[11px] font-semibold tracking-[0.02em] text-[#1A1B1C] text-center leading-[1.2] px-3 whitespace-pre-line">
-        {label}
-      </span>
-    </button>
+    <div className={`${base} cursor-default ${className}`}>
+      <span className={inner}>{label}</span>
+    </div>
   );
 }
 
@@ -52,34 +62,36 @@ export default function Select() {
         {/* CENTER BAND — flex row, pt-1, items-center, justify-center */}
         <div className="flex-1 flex flex-row pt-1 items-center justify-center">
           <div className="scale-[0.75] md:scale-100">
-            {/* cluster wrapper — slightly larger + teeny offsets on each tile */}
+            {/* cluster wrapper with tight, non-touching spacing */}
             <div className="relative w-[230px] h-[230px] md:w-[292px] md:h-[292px]">
-              {/* top */}
+              {/* top — ONLY clickable with subtle zoom hover */}
               <div className="absolute left-1/2 -translate-x-1/2 top-0 translate-y-[-16px] md:translate-y-[-18px]">
                 <DiamondTile
                   label="DEMOGRAPHICS"
+                  clickable
                   onClick={() => handleTile("demographics")}
+                  className="transform-gpu transition-transform duration-300 ease-out hover:scale-[1.04] will-change-transform"
                 />
               </div>
-              {/* left */}
+              {/* left — non-clickable */}
               <div className="absolute top-1/2 -translate-y-1/2 left-0 translate-x-[-16px] md:translate-x-[-18px]">
                 <DiamondTile
                   label={"COSMETIC\nCONCERNS"}
-                  onClick={() => handleTile("cosmetic")}
+                  clickable={false}
                 />
               </div>
-              {/* right */}
+              {/* right — non-clickable */}
               <div className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-[16px] md:translate-x-[18px]">
                 <DiamondTile
                   label="SKIN TYPE DETAILS"
-                  onClick={() => handleTile("skin")}
+                  clickable={false}
                 />
               </div>
-              {/* bottom */}
+              {/* bottom — non-clickable */}
               <div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[16px] md:translate-y-[18px]">
                 <DiamondTile
                   label="WEATHER"
-                  onClick={() => handleTile("weather")}
+                  clickable={false}
                 />
               </div>
             </div>
