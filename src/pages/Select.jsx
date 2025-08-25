@@ -1,6 +1,6 @@
 // src/pages/Select.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
 
@@ -40,6 +40,7 @@ function DiamondTile({ label, onClick, clickable = false, className = "", onMous
 export default function Select() {
   const [lastClicked, setLastClicked] = useState(null);
   const [hoveredKey, setHoveredKey] = useState(null); // which tile is hovered
+  const navigate = useNavigate();
 
   const handleTile = (key) => setLastClicked(key);
 
@@ -86,7 +87,11 @@ export default function Select() {
                 <DiamondTile
                   label="DEMOGRAPHICS"
                   clickable
-                  onClick={() => handleTile("demographics")}
+                  onClick={() => {
+                    // record click and navigate to summary (per spec)
+                    handleTile("demographics");
+                    navigate("/summary");
+                  }}
                   onMouseEnter={() => setHoveredKey("demographics")}
                   onMouseLeave={() => setHoveredKey(null)}
                   className="transform-gpu transition-transform duration-300 ease-out hover:scale-[1.04] will-change-transform"
