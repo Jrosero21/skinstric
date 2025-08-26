@@ -1,4 +1,3 @@
-// src/pages/Result.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
@@ -145,7 +144,7 @@ export default function Result() {
         <input ref={galRef} type="file" accept="image/*" className="hidden" onChange={handlePick} />
       </section>
 
-      {/* Live camera modal (unchanged) */}
+      {/* Live camera modal  */}
       <CameraCaptureModal
         open={cameraOpen}
         onClose={() => setCameraOpen(false)}
@@ -153,7 +152,7 @@ export default function Result() {
         onFallback={() => camRef.current?.click()}
       />
 
-      {/* Camera permission prompt — unchanged styles */}
+      {/* Camera permission prompt */}
       {showCamPrompt && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center">
           <div className="inline-block w-auto max-w-[92vw] shadow-2xl">

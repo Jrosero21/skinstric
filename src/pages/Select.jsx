@@ -1,4 +1,3 @@
-// src/pages/Select.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -39,7 +38,7 @@ function DiamondTile({ label, onClick, clickable = false, className = "", onMous
 
 export default function Select() {
   const [lastClicked, setLastClicked] = useState(null);
-  const [hoveredKey, setHoveredKey] = useState(null); // which tile is hovered
+  const [hoveredKey, setHoveredKey] = useState(null); 
   const navigate = useNavigate();
 
   const handleTile = (key) => setLastClicked(key);
@@ -67,7 +66,7 @@ export default function Select() {
           <div className="scale-[0.75] md:scale-100">
             {/* cluster wrapper with tight, non-touching spacing */}
             <div className="relative w-[230px] h-[230px] md:w-[292px] md:h-[292px]">
-              {/* --- HOVER HALO (bigger + smooth ease-in fade; no rotation) --- */}
+              {/* --- HOVER HALO --- */}
               <div className="pointer-events-none absolute inset-0">
                 <svg
                   viewBox="0 0 100 100"
@@ -88,7 +87,7 @@ export default function Select() {
                   label="DEMOGRAPHICS"
                   clickable
                   onClick={() => {
-                    // record click and navigate to summary (per spec)
+                    // record click and navigate to summary 
                     handleTile("demographics");
                     navigate("/summary");
                   }}

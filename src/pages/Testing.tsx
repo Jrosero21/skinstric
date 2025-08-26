@@ -1,7 +1,3 @@
-// src/pages/Testing.tsx
-// Tweaks: opacity ordering so largest = lightest, smallest = darkest.
-// Everything else unchanged (sizes, centering, underline width).
-
 import { useState, useRef } from "react";
 import Header from "../components/Header";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
@@ -36,7 +32,7 @@ export default function Testing() {
   };
 
   const onProceed = () => {
-    // minimal change: proceed goes to /result
+    // proceed goes to /result
     navigate("/result");
   };
 
@@ -101,7 +97,7 @@ export default function Testing() {
                   layerOpacities={[0.65, 0.85, 1.0]}
                   /* size separation (outer > middle > inner) */
                   layerScales={[1.00, 0.92, 0.84]}
-                  /* Brightness neutral in your current repo */
+                  
                 />
               </div>
             </div>
@@ -173,9 +169,9 @@ export default function Testing() {
         {/* Bottom-right PROCEED (only on final step) */}
         {step === "done" && (
           <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
-            {/* minimal change: `to="/result"` */}
+           
             <DiamondButton label="PROCEED" direction="right" to="/result" />
-            {/* keep the hidden button if you want the imperative nav as a fallback */}
+       
             <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
           </div>
         )}

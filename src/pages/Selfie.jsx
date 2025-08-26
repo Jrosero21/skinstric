@@ -1,4 +1,3 @@
-// src/pages/Selfie.jsx
 import React from "react"
 
 export default function Selfie() {

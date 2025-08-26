@@ -1,8 +1,4 @@
-// src/components/IntroHero.tsx
-// Type-safety fix: use longhand transition props + typed style objects
-// (no visual/behavior changes).
-
-import React, { useMemo, useState } from "react";
+import  { useMemo, useState } from "react";
 import HalfDiamond from "./HalfDiamond";
 import DiamondButton from "./ui/DiamondButton";
 

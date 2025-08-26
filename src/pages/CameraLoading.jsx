@@ -1,4 +1,3 @@
-// src/pages/CameraLoading.jsx
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -21,7 +20,7 @@ export default function CameraLoading() {
 
       <section className="min-h-[92vh] relative md:pt-[64px] flex flex-col items-center">
         <div className="flex-1 w-full flex flex-col items-center justify-center">
-          {/* Diamond + icon (relative wrapper) */}
+          {/* Diamond + icon  */}
           <div className="relative w-[270px] h-[270px] md:w-[482px] md:h-[482px]">
             <RotatingDiamondStack
               size={BASE}
@@ -47,7 +46,7 @@ export default function CameraLoading() {
             </p>
           </div>
 
-          {/* Tips block (unchanged) */}
+          {/* Tips block */}
           <div className="mt-6 md:mt-7 text-center">
             <p className="text-[11px] md:text-xs text-[#6B7280] tracking-[0.06em]">
               TO GET BETTER RESULTS MAKE SURE TO HAVE
@@ -78,7 +77,7 @@ export default function CameraLoading() {
   );
 }
 
-/* Thin centered countdown bar that shrinks to zero */
+/* Thin centered countdown bar - not sure if we really need I only see it there sometimes*/
 function CountdownBar({ durationMs = 3000, onDone }) {
   const [pct, setPct] = useState(0);
   const fired = useRef(false);
