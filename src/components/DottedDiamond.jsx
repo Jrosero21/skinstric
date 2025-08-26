@@ -1,12 +1,4 @@
-// src/components/DottedDiamond.jsx
 import React from "react";
-
-/*
-  Team note (jr dev):
-  - Increased the central diamonds so they "hug" the headline like the comp.
-  - Made the lines subtle (opacity-30) and 1px to match the delicate look.
-  - Kept a smaller single diamond on mobile.
-*/
 
 export default function DottedDiamond({ hiddenWhenHover = false }) {
   return (

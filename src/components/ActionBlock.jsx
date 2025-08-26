@@ -1,17 +1,5 @@
-// src/components/ActionBlock.jsx
 import React from "react";
 
-/*
-  Team note:
-  - Generic block that renders the dotted frame + action button.
-  - Props:
-    - side: "left" | "right" -> decides which edge to anchor and text/button orientation
-    - faded: boolean -> controls opacity (non-hovered side fades)
-    - label: string -> button label (e.g., "DISCOVER A.I." or "TAKE TEST")
-    - onHoverEnter / onHoverLeave: handlers to set hover side in the parent
-    - onClick: click handler (e.g., navigate to /testing)
-  - Positioning values follow the current layout spec (off-canvas feel).
-*/
 
 export default function ActionBlock({
   side = "left",

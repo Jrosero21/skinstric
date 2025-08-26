@@ -1,20 +1,16 @@
-// src/components/HalfDiamond.tsx
-// Edge-anchored, vertically centered dotted diamond.
-// NOTE: gap now typed as `number` to quiet VS Code/TS in all setups.
-
 import React from "react";
 
 type Props = {
   side: "left" | "right";
-  /** Diamond square size in px */
+
   size?: number;
-  /** Vertical nudge in px (negative = up) */
+
   yOffset?: number;
-  /** Dotted gap in px (we map 2/3/4 to utility classes) */
+
   gap?: number;
-  /** Optional style override (used to fade on hover) */
+
   style?: React.CSSProperties;
-  /** Extra classNames (rarely needed) */
+
   className?: string;
 };
 
@@ -34,7 +30,7 @@ export default function HalfDiamond({
       ? { top: topCalc, left: `-${half}px`, width: `${size}px`, height: `${size}px` }
       : { top: topCalc, right: `-${half}px`, width: `${size}px`, height: `${size}px` };
 
-  // Map numeric gap to our tiny utility set
+
   const gapClass =
     gap <= 2 ? "diamond-gap-2" : gap >= 4 ? "diamond-gap-4" : "diamond-gap-3";
 

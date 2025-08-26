@@ -1,5 +1,3 @@
-// src/components/Header.tsx
-// Behavior-only update: infer ANALYSIS vs INTRO and hide "ENTER CODE" on analysis pages.
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -19,7 +17,7 @@ export default function Header({ section }: HeaderProps) {
 
   return (
     <header className="flex flex-row h-[64px] w-full justify-between py-3 mb-3 relative z-[1000] px-3 sm:px-4">
-      {/* left cluster – only change: small left shift for alignment */}
+      {/* left cluster */}
       <div className="flex flex-row pt-1 scale-75 justify-center items-center -ml-2 sm:-ml-3 md:-ml-5">
         <Link
           to="/"

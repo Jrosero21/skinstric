@@ -1,13 +1,7 @@
-// src/components/BackButton.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 
-/*
-  Team note (junior dev-style):
-  - Replaced the image import (PolygonLeft.png) with an inline SVG arrow.
-  - This removes a file dependency and fixes the Vite "cannot resolve import" error.
-  - If design later requires a specific PNG, we can swap the <svg> for an <img>.
-*/
+
 
 export default function BackButton({ to = "/" }: { to?: string }) {
   return (

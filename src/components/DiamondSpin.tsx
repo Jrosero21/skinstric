@@ -9,7 +9,7 @@ type Props = {
 export default function DiamondSpin({ large, mid, small }: Props) {
   return (
     <div className="capture-diamond-stage">
-      {/* These are decorative page-wide spinners; if you want one set per card instead, move into the card */}
+      {/* These are decorative page-wide spinners */}
       <img
         src={large}
         alt="Diamond Large"

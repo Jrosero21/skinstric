@@ -1,4 +1,3 @@
-// src/components/CaptureCard.tsx
 import type { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren<{
@@ -50,7 +49,7 @@ export default function CaptureCard({
           <img src={iconSrc} alt={iconAlt} className="w-[64%] h-[64%]" />
         </div>
 
-        {/* label + pointer line (position differs per card) */}
+        {/* label + pointer line  */}
         <div
           className={
             rightSide
