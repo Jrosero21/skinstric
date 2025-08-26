@@ -77,8 +77,8 @@ export default function CameraLoading() {
   );
 }
 
-/* Thin centered countdown bar - not sure if we really need I only see it there sometimes*/
-function CountdownBar({ durationMs = 3000, onDone }) {
+/* Thin centered countdown bar  */
+function CountdownBar({ durationMs = 6000, onDone }) {
   const [pct, setPct] = useState(0);
   const fired = useRef(false);
 
@@ -91,20 +91,21 @@ function CountdownBar({ durationMs = 3000, onDone }) {
         raf = requestAnimationFrame(tick);
       } else if (!fired.current) {
         fired.current = true;
-        onDone?.(); // tell parent to navigate
+        onDone?.();
       }
     });
     return () => cancelAnimationFrame(raf);
   }, [durationMs, onDone]);
 
+  // percentage of the bar still visible (left anchored)
   const remaining = Math.max(0, 100 - pct);
-  const marginLeft = (100 - remaining) / 2;
 
   return (
-    <div className="h-[4px] md:h-[6px] rounded-full bg-zinc-300/50 overflow-hidden">
+    <div className="relative h-[4px] md:h-[6px] rounded-full bg-zinc-300/50 overflow-hidden">
+      {/* anchored to the LEFT so it erodes left→right */}
       <div
-        className="h-full bg-zinc-400/70 rounded-full transition-[width,margin] duration-75 ease-linear"
-        style={{ width: `${remaining}%`, marginLeft: `${marginLeft}%` }}
+        className="absolute left-0 top-0 h-full bg-zinc-400/70 transition-[width] duration-75 ease-linear"
+        style={{ width: `${remaining}%` }}
       />
     </div>
   );
