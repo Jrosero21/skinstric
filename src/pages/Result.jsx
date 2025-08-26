@@ -187,11 +187,26 @@ export default function Result() {
   );
 }
 
-function ResultDiamonds({ startAngles, size, className }) {
+function ResultDiamonds({ startAngles, className }) {
+  const boxRef = React.useRef(null);
+  const [size, setSize] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    if (!boxRef.current) return;
+    const el = boxRef.current;
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0].contentRect;
+      setSize(Math.floor(Math.min(r.width, r.height)));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className={className}>
+    <div ref={boxRef} className={className}>
+      {/* fall back to 1px until measured */}
       <RotatingDiamondStack
-        size={size}
+        size={size || 1}
         layerScales={[1.0, 0.92, 0.84]}
         layerOpacities={[0.5, 0.7, 0.9]}
         startAngles={startAngles}
@@ -201,3 +216,4 @@ function ResultDiamonds({ startAngles, size, className }) {
     </div>
   );
 }
+

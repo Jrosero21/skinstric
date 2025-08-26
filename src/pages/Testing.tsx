@@ -78,10 +78,8 @@ export default function Testing() {
       <Header section="INTRO" />
 
       <main className="relative flex-1">
-        <div className="px-4 sm:px-6 lg:px-8 mt-1">
-          <p className="text-[16px] font-semibold uppercase tracking-[-0.02em]">
-            TO START ANALYSIS
-          </p>
+      <div className="absolute top-2 left-9 md:left-8 text-left z-40">
+          <p className="font-semibold text-xs md:text-sm tracking-[0.02em]">TO START ANALYSIS</p>
         </div>
 
         {/* Center stage */}
