@@ -1,4 +1,5 @@
-import  { useMemo, useState } from "react";
+// src/components/IntroHero.tsx
+import { useMemo, useState } from "react";
 import HalfDiamond from "./HalfDiamond";
 import DiamondButton from "./ui/DiamondButton";
 
@@ -6,14 +7,17 @@ type HoverSide = "left" | "right" | null;
 
 /** small config block for safe tweaks */
 const UI = {
-  EDGE_GUTTER_REM: 6,                 // padding from page edge during slide
-  HEADLINE_MS: 1400,                  // slower slide (unchanged from last)
-  FADE_MS: 260,                       // fades stay snappy
-  EASING: "cubic-bezier(0.19,1,0.22,1)", // smooth ease-out
-  HEADLINE_Y_REM: -0.75,              // vertical nudge
+  EDGE_GUTTER_REM: 6,                        // padding from page edge during slide
+  HEADLINE_MS: 1100,                         // a touch faster
+  FADE_MS: 260,
+  EASING: "cubic-bezier(0.22, 1, 0.36, 1)",  // smooth ease-out
+  HEADLINE_Y_REM: -0.75,
   DIAMOND_SIZE: 640,
   DIAMOND_Y_OFFSET: -10,
   DOT_GAP: 3 as 2 | 3 | 4,
+
+  // how far short of the page edge the headline stops (where the old diamond tip was)
+  TIP_OFFSET_REM: 10,
 };
 
 export default function IntroHero() {
@@ -21,18 +25,33 @@ export default function IntroHero() {
 
   // where the headline slides horizontally
   const edgeGutter = `${UI.EDGE_GUTTER_REM}rem`;
+  const tipOffset = `${UI.TIP_OFFSET_REM}rem`;
   const translateX = useMemo(() => {
-    if (hover === "right") return `calc(-50vw + ${edgeGutter})`; // to left edge
-    if (hover === "left")  return `calc( 50vw - ${edgeGutter})`; // to right edge
+    if (hover === "right") return `calc(-50vw + ${edgeGutter} + ${tipOffset})`; // stop earlier toward center
+    if (hover === "left")  return `calc( 50vw - ${edgeGutter} - ${tipOffset})`;
     return "0rem"; // centered
-  }, [hover, edgeGutter]);
+  }, [hover, edgeGutter, tipOffset]);
 
-  // vertical nudge so the title sits a bit higher visually
+  // second-line nudge so it aligns left/right with the slide
+  const secondLineX = useMemo(() => {
+    if (hover === "right") return "-6rem";
+    if (hover === "left")  return "6rem";
+    return "0rem";
+  }, [hover]);
+
   const translateY = `${UI.HEADLINE_Y_REM}rem`;
 
-  // ---------- typed style objects (quiet VS Code/TS) ----------
+  // ---------- typed style objects ----------
   const headlineStyle: React.CSSProperties = {
     transform: `translateX(${translateX}) translateY(${translateY})`,
+    transitionProperty: "transform",
+    transitionDuration: `${UI.HEADLINE_MS}ms`,
+    transitionTimingFunction: UI.EASING,
+    willChange: "transform",
+  };
+
+  const secondLineStyle: React.CSSProperties = {
+    transform: `translateX(${secondLineX})`,
     transitionProperty: "transform",
     transitionDuration: `${UI.HEADLINE_MS}ms`,
     transitionTimingFunction: UI.EASING,
@@ -50,7 +69,7 @@ export default function IntroHero() {
     transitionProperty: "opacity",
     transitionDuration: `${UI.FADE_MS}ms`,
   };
-  // -----------------------------------------------------------
+  // ----------------------------------------
 
   return (
     <section
@@ -81,7 +100,9 @@ export default function IntroHero() {
           style={headlineStyle}
         >
           Sophisticated
-          <span className="block text-[#1A1B1C] lg:translate-x-[-6rem]">skincare</span>
+          <span className="block text-[#1A1B1C]" style={secondLineStyle}>
+            skincare
+          </span>
         </h1>
       </div>
 
@@ -113,7 +134,12 @@ export default function IntroHero() {
           className="transition-opacity"
           style={{ transitionDuration: `${UI.FADE_MS}ms`, opacity: hover === "left" ? 0 : 1 } as React.CSSProperties}
         >
-          <DiamondButton label="TAKE TEST" direction="right" to="/testing" />
+          <DiamondButton
+            label="TAKE TEST"
+            direction="right"
+            to="/testing"
+            className="flex-row-reverse"
+          />
         </div>
       </div>
 
