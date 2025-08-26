@@ -19,6 +19,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
 
     // Aliases + Vite client types
     "baseUrl": ".",

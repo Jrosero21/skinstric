@@ -147,34 +147,24 @@ export default function Testing() {
 
         {/* Bottom-left BACK */}
         <div className="absolute bottom-6 left-4 md:left-6">
-          <button
-            onClick={goBack}
-            className="inline-flex items-center gap-3 text-xs font-semibold tracking-wide"
-          >
-            <span
-              aria-hidden
-              className="relative inline-flex h-6 w-6 rotate-45 items-center justify-center border border-[#1A1B1C]"
-            >
-              <img
-                src="/assets/PolygonLeft.png"
-                alt=""
-                className="absolute -rotate-45 h-2.5 w-2.5 select-none"
-                draggable={false}
-              />
-            </span>
-            <span>BACK</span>
-          </button>
+        <DiamondButton label="Back" direction="left" to="/" />
+       
+       <button onClick={goBack} className="sr-only" aria-hidden tabIndex={-1} />
         </div>
 
-        {/* Bottom-right PROCEED (only on final step) */}
-        {step === "done" && (
-          <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
-           
-            <DiamondButton label="PROCEED" direction="right" to="/result" />
-       
-            <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
-          </div>
-        )}
+    {/* Bottom-right PROCEED (only on final step) */}
+{step === "done" && (
+  <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
+    <DiamondButton
+      label="PROCEED"
+      direction="right"
+      to="/result"
+      className="flex-row-reverse"   // <— icon to the right of the label
+    />
+    <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
+  </div>
+)}
+
       </main>
     </div>
   );
