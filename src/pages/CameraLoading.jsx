@@ -80,22 +80,43 @@ export default function CameraLoading() {
 /* Thin centered countdown bar  */
 function CountdownBar({ durationMs = 6000, onDone }) {
   const [pct, setPct] = useState(0);
-  const fired = useRef(false);
+  const onDoneRef = useRef(onDone);
+  const rafRef = useRef(null);
+
+  // Keep onDone reference current
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
 
   useEffect(() => {
-    const start = performance.now();
-    let raf = requestAnimationFrame(function tick(now) {
-      const next = Math.min(100, ((now - start) / durationMs) * 100);
-      setPct(next);
-      if (next < 100) {
-        raf = requestAnimationFrame(tick);
-      } else if (!fired.current) {
-        fired.current = true;
-        onDone?.();
+    let startTime = Date.now();
+    let isComplete = false;
+
+    const tick = () => {
+      if (isComplete) return;
+
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, (elapsed / durationMs) * 100);
+      
+      setPct(progress);
+
+      if (progress >= 100) {
+        isComplete = true;
+        onDoneRef.current?.();
+      } else {
+        rafRef.current = requestAnimationFrame(tick);
       }
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [durationMs, onDone]);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      isComplete = true;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [durationMs]);
 
   // percentage of the bar still visible (left anchored)
   const remaining = Math.max(0, 100 - pct);
@@ -104,7 +125,7 @@ function CountdownBar({ durationMs = 6000, onDone }) {
     <div className="relative h-[4px] md:h-[6px] rounded-full bg-zinc-300/50 overflow-hidden">
       {/* anchored to the LEFT so it erodes left→right */}
       <div
-        className="absolute left-0 top-0 h-full bg-zinc-400/70 transition-[width] duration-75 ease-linear"
+        className="absolute left-0 top-0 h-full bg-zinc-400/70 transition-none"
         style={{ width: `${remaining}%` }}
       />
     </div>

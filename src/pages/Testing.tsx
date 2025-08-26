@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import RotatingDiamondStack from "../components/graphics/RotatingDiamondStack";
 import { useNavigate } from "react-router-dom";
 import DiamondButton from "../components/ui/DiamondButton";
+import { postPhaseOne } from "../lib/apiClient"; // <-- added
 
 type Step = "name" | "city" | "processing" | "done";
 
@@ -25,10 +26,30 @@ export default function Testing() {
     setStep("city");
   };
 
-  const advanceFromCity = () => {
+  const advanceFromCity = async () => {
     if (!city.trim()) return;
+
+    // move to processing while we hit the API
     setStep("processing");
-    setTimeout(() => setStep("done"), 1600);
+
+    try {
+      // call Level 1 endpoint; console shows the response for now
+      const resp = await postPhaseOne({ name: name.trim(), location: city.trim() });
+      console.log("PhaseOne response:", resp);
+
+      // keep around for later pages (Summary etc.)
+      localStorage.setItem(
+        "sx_user",
+        JSON.stringify({ name: name.trim(), location: city.trim(), phase1: resp })
+      );
+
+      // done -> show final step
+      setStep("done");
+    } catch (err) {
+      console.error("PhaseOne error:", err);
+      // still let user proceed for now; we can add error UI later
+      setStep("done");
+    }
   };
 
   const onProceed = () => {
@@ -95,13 +116,12 @@ export default function Testing() {
                   layerOpacities={[0.65, 0.85, 1.0]}
                   /* size separation (outer > middle > inner) */
                   layerScales={[1.00, 0.92, 0.84]}
-                  
                 />
               </div>
             </div>
 
             {/* Step content */}
-            <div className="relative z-10">
+            <div className="relative z-10 text-center">
               {step === "name" && (
                 <Prompt
                   placeholder="Introduce Yourself"
@@ -145,24 +165,17 @@ export default function Testing() {
 
         {/* Bottom-left BACK */}
         <div className="absolute bottom-6 left-4 md:left-6">
-        <DiamondButton label="Back" direction="left" to="/" />
-       
-       <button onClick={goBack} className="sr-only" aria-hidden tabIndex={-1} />
+          <DiamondButton label="Back" direction="left" to="/" />
+          <button onClick={goBack} className="sr-only" aria-hidden tabIndex={-1} />
         </div>
 
-    {/* Bottom-right PROCEED (only on final step) */}
-{step === "done" && (
-  <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
-    <DiamondButton
-      label="PROCEED"
-      direction="right"
-      to="/result"
-      className="flex-row-reverse"   // <— icon to the right of the label
-    />
-    <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
-  </div>
-)}
-
+        {/* Bottom-right PROCEED (only on final step) */}
+        {step === "done" && (
+          <div className="absolute bottom-6 right-4 md:right-6 animate-proceed-enter">
+            <DiamondButton label="PROCEED" direction="right" to="/result" />
+            <button onClick={onProceed} className="sr-only" aria-hidden tabIndex={-1} />
+          </div>
+        )}
       </main>
     </div>
   );

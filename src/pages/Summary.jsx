@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -59,50 +59,72 @@ function Ring({ value = 51 }) {
 export default function Summary() {
   // active panel: 'race' | 'age' | 'sex'
   const [active, setActive] = useState("race");
-
-  // static options (API later)
-  const data = {
-    race: [
-      ["Latino hispanic", 51],
-      ["Southeast asian", 23],
-      ["White", 13],
-      ["East asian", 5],
-      ["South asian", 3],
-      ["Middle eastern", 2],
-      ["Black", 0],
-    ],
-    age: [
-      ["0-2", 29],
-      ["3-9", 0],
-      ["10-19", 0],
-      ["20-29", 0],
-      ["30-39", 31], // default
-      ["40-49", 0],
-      ["50-59", 7],
-      ["60-69", 3],
-      ["70+", 29],
-    ],
-    sex: [
-      ["MALE", 64], // default
-      ["FEMALE", 35],
-    ],
-  };
-
-  // per-category selected index (defaults match earlier screenshots)
+  const [data, setData] = useState({
+    race: [],
+    age: [],
+    sex: [],
+  });
   const [selected, setSelected] = useState({
     race: 0,
-    age: 4,
+    age: 0,
     sex: 0,
   });
+
+  useEffect(() => {
+    // Load data from localStorage
+    const userData = JSON.parse(localStorage.getItem("sx_user") || "{}");
+    const phase2Data = userData.phase2?.data;
+    
+    if (phase2Data) {
+      // Convert API data to the format expected by the UI
+      const raceData = phase2Data.race ? Object.entries(phase2Data.race).map(([key, value]) => [key, Math.round(value * 100)]).sort((a, b) => b[1] - a[1]) : [];
+      const ageData = phase2Data.age ? Object.entries(phase2Data.age).map(([key, value]) => [key, Math.round(value * 100)]).sort((a, b) => b[1] - a[1]) : [];
+      const sexData = phase2Data.gender ? Object.entries(phase2Data.gender).map(([key, value]) => [key.toUpperCase(), Math.round(value * 100)]).sort((a, b) => b[1] - a[1]) : [];
+      
+      setData({
+        race: raceData,
+        age: ageData,
+        sex: sexData,
+      });
+    } else {
+      // Fallback to static data if no API data
+      setData({
+        race: [
+          ["Latino hispanic", 51],
+          ["Southeast asian", 23],
+          ["White", 13],
+          ["East asian", 5],
+          ["South asian", 3],
+          ["Middle eastern", 2],
+          ["Black", 0],
+        ],
+        age: [
+          ["0-2", 29],
+          ["3-9", 0],
+          ["10-19", 0],
+          ["20-29", 0],
+          ["30-39", 31],
+          ["40-49", 0],
+          ["50-59", 7],
+          ["60-69", 3],
+          ["70+", 29],
+        ],
+        sex: [
+          ["MALE", 64],
+          ["FEMALE", 35],
+        ],
+      });
+    }
+  }, []);
 
   const headline = data[active][selected[active]]?.[0] ?? "";
   const activePct = data[active][selected[active]]?.[1] ?? 0;
 
   // helper for left-tile labels
   const leftLabels = {
-    race: data.race[selected.race][0],
-    age: data.age[selected.age][0],
-    sex: data.sex[selected.sex][0],
+    race: data.race[selected.race]?.[0] ?? "",
+    age: data.age[selected.age]?.[0] ?? "",
+    sex: data.sex[selected.sex]?.[0] ?? "",
   };
 
   return (

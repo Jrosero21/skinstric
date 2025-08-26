@@ -1,6 +1,8 @@
+// src/pages/Camera/Capture.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
+import { postPhaseTwo } from "../../lib/apiClient";
 
 function BackLite() {
   return (
@@ -32,23 +34,63 @@ export default function Capture() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // NOTE: only change here — make play() reliable and clean up safely
     let stream;
+    let cancelled = false;
+
     (async () => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "user" },
           audio: false,
         });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-          setReady(true);
+        if (cancelled) {
+          // if unmounted before ready, stop immediately
+          stream.getTracks().forEach((t) => t.stop());
+          return;
         }
+        const v = videoRef.current;
+        if (!v) return;
+
+        // set srcObject once
+        v.srcObject = stream;
+
+        // wait for metadata (dimension info) before calling play()
+        await new Promise((resolve) => {
+          if (v.readyState >= 1) resolve();
+          else {
+            const onMeta = () => {
+              v.removeEventListener("loadedmetadata", onMeta);
+              resolve();
+            };
+            v.addEventListener("loadedmetadata", onMeta);
+          }
+        });
+
+        // try to play; AbortError is benign if a load interrupts play()
+        try {
+          await v.play();
+        } catch (err) {
+          if (!err || err.name !== "AbortError") {
+            console.error("Camera play() error:", err);
+          }
+        }
+        setReady(true);
       } catch (e) {
         console.error("Camera error:", e);
       }
     })();
+
     return () => {
+      // tidy up on unmount
+      cancelled = true;
+      const v = videoRef.current;
+      try {
+        if (v) {
+          v.pause();
+          v.srcObject = null;
+        }
+      } catch {}
       if (stream) stream.getTracks().forEach((t) => t.stop());
     };
   }, []);
@@ -74,12 +116,34 @@ export default function Capture() {
     setAnalyzing(false);
   };
 
-  const handleUsePhoto = () => {
+  const handleUsePhoto = async () => {
+    if (!photoUrl) return;
+    
     setAnalyzing(true);
-    setTimeout(() => {
+    
+    try {
+      // Convert data URL to base64 string (remove data:image/jpeg;base64, prefix)
+      const base64Image = photoUrl.split(',')[1];
+      
+      // Call Phase Two API
+      const result = await postPhaseTwo({ image: base64Image });
+      console.log("Phase Two response:", result);
+      
+      // Store the result for Summary page
+      const existingUser = JSON.parse(localStorage.getItem("sx_user") || "{}");
+      localStorage.setItem(
+        "sx_user", 
+        JSON.stringify({ ...existingUser, phase2: result })
+      );
+      
       setAnalyzing(false);
       navigate("/select");
-    }, 1800);
+    } catch (error) {
+      console.error("Phase Two error:", error);
+      // Still proceed to keep the flow working
+      setAnalyzing(false);
+      navigate("/select");
+    }
   };
 
   return (
