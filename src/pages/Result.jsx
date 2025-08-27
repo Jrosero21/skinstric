@@ -1,4 +1,3 @@
-// src/pages/Result.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import DiamondButton from "../components/ui/DiamondButton";
@@ -20,7 +19,7 @@ export default function Result() {
   // camera permission prompt
   const [showCamPrompt, setShowCamPrompt] = useState(false);
 
-  // NEW: preparing overlay for gallery flow
+
   const [isPreparing, setIsPreparing] = useState(false);
 
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ export default function Result() {
     };
   }, [previewUrl]);
 
-  // unchanged: basic picker handler (used by camera fallback input)
+
   const handlePick = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -44,7 +43,7 @@ export default function Result() {
     });
   };
 
-  // NEW: gallery-specific handler — same preview behavior + preparing overlay + alert
+
   const handleGalleryPick = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -57,11 +56,11 @@ export default function Result() {
 
     // show “Preparing analysis…” state, then pop the success notice
     setIsPreparing(true);
-    // short realistic delay (matches your video feel)
+    // short realistic delay 
     setTimeout(() => {
       alert("Image analyzed successfully!");
       setIsPreparing(false);
-      // ROUTE TO SELECT AFTER USER HITS "OK"
+   
       navigate("/select");
     }, 1300);
   };
@@ -199,7 +198,7 @@ export default function Result() {
           className="hidden"
           onChange={handlePick}
         />
-        {/* NEW: gallery input uses the gallery-specific handler */}
+        {/*gallery input uses the gallery-specific handler */}
         <input
           ref={galRef}
           type="file"
